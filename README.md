@@ -1,6 +1,11 @@
 # Lecture-Quiz-Software
 
 ****
+
+### Backend design workflow
+![img.png](static/system_desgin.png)
+
+****
 ### Git workflow
 
 ![img.png](static/git_workflow.png)
@@ -59,7 +64,7 @@ $ ./local/install_dependencies/lqs_db_api.sh
 
 - quiz_id (primary key, int)
 - quiz_name (varchar)
-- quiz_type (varchar, "multiple-choice" or "drag & drop")
+- quiz_type (ENUM, "multiple-choice")
 - quiz_duration (int, in minutes)
 - lecture_id (int, foreign key referencing lecture_id in Lectures table)
 #### Table 4: Questions
@@ -84,4 +89,5 @@ $ ./local/install_dependencies/lqs_db_api.sh
 - score (int, out of total number of questions in quiz)
 - score_date (date)
 
+****
 ![img.png](static/db_er_digrame.png)
