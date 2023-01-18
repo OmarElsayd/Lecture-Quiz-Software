@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from sqlalchemy.dialects.postgresql.base import ENUM
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, CheckConstraint, Constraint, and_
 from sqlalchemy.orm import relationship
 from lqs_database.db_models.base import Base
 
@@ -28,10 +28,27 @@ class Users(Base):
 
 class Lectures(Base):
     __tablename__ = 'lectures'
-
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
+    lecture_name = Column(String)
+    lecture_date = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id',ondelete='CASCADE'), nullable=True)
+    is_instructor = Column(Boolean, unique=False, default=False)
+    number_of_students = Column(Integer)
+    user = relationship("Users", back_populates="lectures")
     created = Column(DateTime, default=datetime.utcnow)
+
+    @classmethod
+    def if_is_instructor(cls, session, lecture_id):
+        with session.begin() as cls_session:
+            instructor = cls_session.query(Users).filter(
+                and_(Users.id == cls.instructor_id, Users.role == 'Instructor')
+            ).first()
+            if instructor:
+                session.query(Lectures).filter(
+                    Lectures.id == lecture_id).update({Lectures.is_instructor: True},
+                                                      synchronize_session='evaluate')
+            else:
+                return
 
 
 class Quizzes(Base):

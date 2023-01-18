@@ -1,8 +1,8 @@
-"""create_db
+"""add_db_table
 
-Revision ID: a0ae48c98b77
+Revision ID: 28b9bfec2623
 Revises: 
-Create Date: 2023-01-14 19:59:17.143811
+Create Date: 2023-01-17 22:23:13.207119
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'a0ae48c98b77'
+revision = '28b9bfec2623'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,13 +28,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     schema='lqs'
     )
-    op.create_table('lectures',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=True),
-    sa.Column('created', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    schema='lqs'
-    )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True),
@@ -42,6 +35,18 @@ def upgrade() -> None:
     sa.Column('password', sa.String(length=50), nullable=True),
     sa.Column('role', postgresql.ENUM('Instructor', 'Student', name='role'), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    schema='lqs'
+    )
+    op.create_table('lectures',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('lecture_name', sa.String(), nullable=True),
+    sa.Column('lecture_date', sa.String(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('is_instructor', sa.Boolean(), nullable=True),
+    sa.Column('number_of_students', sa.Integer(), nullable=True),
+    sa.Column('created', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['lqs.users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     schema='lqs'
     )
@@ -101,7 +106,7 @@ def downgrade() -> None:
     op.drop_table('scores', schema='lqs')
     op.drop_table('questions', schema='lqs')
     op.drop_table('quizzes', schema='lqs')
-    op.drop_table('users', schema='lqs')
     op.drop_table('lectures', schema='lqs')
+    op.drop_table('users', schema='lqs')
     op.drop_table('answer_lists', schema='lqs')
     # ### end Alembic commands ###
