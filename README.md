@@ -91,3 +91,33 @@ $ ./local/install_dependencies/lqs_db_api.sh
 
 ****
 ![img.png](static/db_er_digrame.png)
+
+
+****
+## Angular Build and Run
+
+- ### First make sure that you have Node v18.12.1 or newer installed 
+- run ```node --version``` in your terminal to make sure you have installed it :
+
+![img.png](static/Node.png)
+
+
+- Once you have node, go ahead and install Angular CLI:
+```bash
+$ npm install -g @angular/cli
+```
+Note that if you are running this on Windows powershell, you will need to change ExecutionPolicy:
+```bash
+$ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+Once you get these done, you can run build and run the project:
+```bash
+$ cd lqs_ui
+```
+then
+```bash
+$ ng serve --open
+```
+Now you should see the following:
+![img.png](static/ngapp.png)
