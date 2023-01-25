@@ -96,7 +96,8 @@ $ ./local/install_dependencies/lqs_db_api.sh
 ****
 ## Angular Build and Run
 
-- ### First make sure that you have Node v18.12.1 or newer installed 
+- ### First make sure that you have Node v18.12.1 or newer installed:
+  - https://nodejs.org/en/download/
 - run ```node --version``` in your terminal to make sure you have installed it :
 
 ![img.png](static/Node.png)
