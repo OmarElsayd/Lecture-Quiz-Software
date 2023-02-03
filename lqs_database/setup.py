@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="lqs_models",
+    name="LqsDatabase",
     version="1.0.0",
     author="Omar Elsayd",
     email="omar_2546@hotmail.com",
