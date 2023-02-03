@@ -3,12 +3,12 @@ from enum import Enum
 from sqlalchemy.dialects.postgresql.base import ENUM
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, and_
 from sqlalchemy.orm import relationship
-from lqs_database.db_models.base import Base
+from db_models.base import Base
 
 
 class Role(Enum):
-    Instructor = "Instructor"
-    Student = "Student"
+    INSTRUCTOR = "INSTRUCTOR"
+    STUDENT = "STUDENT"
     TA = "TA"
 
 
@@ -32,11 +32,12 @@ class Lectures(Base):
     id = Column(Integer, primary_key=True)
     lecture_name = Column(String)
     lecture_date = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id',ondelete='CASCADE'), nullable=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     is_instructor = Column(Boolean, unique=False, default=False)
     number_of_students = Column(Integer)
-    user = relationship("Users", back_populates="lectures")
     created = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("Users")
 
     @classmethod
     def if_is_instructor(cls, session, lecture_id):
