@@ -121,4 +121,4 @@ then
 $ ng serve --open
 ```
 Now you should see the following:
-![img.png](static/ngapp.png)
+![img.png](static/img.png)

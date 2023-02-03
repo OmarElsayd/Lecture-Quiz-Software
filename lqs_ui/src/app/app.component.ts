@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'lqs_ui';
+  date = new Date().toLocaleDateString();
+  time = new Date().toLocaleTimeString();
+  version = '1.0.0';
 }
