@@ -1,8 +1,8 @@
 """add_db_table
 
-Revision ID: 28b9bfec2623
+Revision ID: 1a41b2982ceb
 Revises: 
-Create Date: 2023-01-17 22:23:13.207119
+Create Date: 2023-02-03 14:05:43.628605
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '28b9bfec2623'
+revision = '1a41b2982ceb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,7 +33,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=50), nullable=True),
     sa.Column('email', sa.String(length=50), nullable=True),
     sa.Column('password', sa.String(length=50), nullable=True),
-    sa.Column('role', postgresql.ENUM('Instructor', 'Student', name='role'), nullable=True),
+    sa.Column('role', postgresql.ENUM('INSTRUCTOR', 'STUDENT', 'TA', name='role'), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     schema='lqs'
@@ -46,7 +46,7 @@ def upgrade() -> None:
     sa.Column('is_instructor', sa.Boolean(), nullable=True),
     sa.Column('number_of_students', sa.Integer(), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['lqs.users.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['lqs.users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     schema='lqs'
     )
