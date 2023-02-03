@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from sqlalchemy.dialects.postgresql.base import ENUM
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, CheckConstraint, Constraint, and_
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, and_
 from sqlalchemy.orm import relationship
 from lqs_database.db_models.base import Base
 
@@ -9,6 +9,7 @@ from lqs_database.db_models.base import Base
 class Role(Enum):
     Instructor = "Instructor"
     Student = "Student"
+    TA = "TA"
 
 
 class QuizType(Enum):
