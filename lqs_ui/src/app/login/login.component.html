@@ -1,0 +1,33 @@
+
+<head>
+    <link rel="stylesheet" type="text/scss" href="login.component.scss">
+  </head>
+  
+  <!-- Toolbar -->
+  <div class="toolbar" role="banner">
+    <div id="logo1">
+      <img width="100" alt="lqs Logo" src="assets/b.png" />
+    </div>
+    <span>WELCOME</span>
+    <div class="spacer"></div>
+    <input type="text" [(ngModel)]="email" class="EmailTextBoxLogin" name="EmailTB" placeholder="Email">
+    <input type="password" [(ngModel)]="password" class="PasswordTextBoxLogin" name="PWTB" placeholder="Password">
+    <button class="button" (click)="LoginProsses()" >Login</button>
+    <button class="button" (click)="Register()">Register</button>
+  </div>
+  
+  <div class="content" role="main">
+    <div class="logoDiv">
+      <img class="logo2" width="500" alt="lqs Logo" src="assets/b.png" />
+    </div>
+  </div>
+  <div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">
+    <div class="version" style="position: absolute; left: 15px;">
+      <span>© 2023 LQS </span>
+      <span>V {{version}}</span>
+    </div>
+    <div class="Version_time">
+      <span>{{date}} {{time}}</span>
+    </div>
+  </div>
+  

@@ -22,13 +22,14 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     email = Column(String(50))
-    password = Column(String(50))
+    password = Column(String)
     role = Column(ENUM(Role))
     created = Column(DateTime, default=datetime.utcnow)
 
 
 class Lectures(Base):
     __tablename__ = 'lectures'
+    
     id = Column(Integer, primary_key=True)
     lecture_name = Column(String)
     lecture_date = Column(String)
