@@ -1,5 +1,5 @@
 import logging
-from . import login
+from . import login, register
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -27,4 +27,4 @@ app.add_middleware(
 )
 
 app.include_router(login.router)
-
+app.include_router(register.router)

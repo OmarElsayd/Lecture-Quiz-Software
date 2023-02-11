@@ -13,13 +13,13 @@
 
 <div class="content" role="main">
     <div class="registerDiv">
-        <input type="text" class="TextBoxRegister" name="EmailTB" placeholder="     Full name">
-        <input type="text" class="TextBoxRegister" name="EmailTB" placeholder="     Email">
-        <input type="password" class="TextBoxRegister" name="PWTB" placeholder="    Password">
-        <input type="password" class="TextBoxRegister" name="PWTB" placeholder="    Confirm Password">
-        <input type="text" class="TextBoxRegister" name="PWTB" placeholder="    Class Code">
-        <input type="text" class="TextBoxRegister" name="PWTB" placeholder="    Instructor Name">
-        <button class="button">Submit</button>
+        <input type="text" [(ngModel)]="name" class="TextBoxRegister" name="EmailTB" placeholder="     Full name">
+        <input type="text" [(ngModel)]="email" class="TextBoxRegister" name="EmailTB" placeholder="     Email">
+        <input type="text" [(ngModel)]="confirm_email" class="TextBoxRegister" name="EmailTB" placeholder="     Confirm Email">
+        <input type="password" [(ngModel)]="password" class="TextBoxRegister" name="PWTB" placeholder="    Password">
+        <input type="password" [(ngModel)]="confirm_password" class="TextBoxRegister" name="PWTB" placeholder="    Confirm Password">
+        <input type="text" [(ngModel)]="class_code" class="TextBoxRegister" name="PWTB" placeholder="    Class Code">
+        <button class="button" (click)="RegisterProsses()">Submit</button>
     </div>
 
 

@@ -1,5 +1,4 @@
 import logging
-import hashlib
 from enum import Enum
 from typing import Union
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -7,6 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db_models.models import Users, Role
 from db_api.local_session import get_db
+from db_api.api_util import get_hashed_password
 
 
 logging.basicConfig(level=logging.INFO)
@@ -34,19 +34,6 @@ class LoginResponse(BaseModel):
     class Config:
         orm_mode = True
         
-        
-        
-def get_hashed_password(password: str) -> str:
-    """
-    Get hashed password
-    Args:
-        password (str): Password to be hashed
-
-    Returns:
-        str: Hashed password
-    """
-    return hashlib.sha256(password.encode()).hexdigest()
-    
 
 
 
@@ -90,7 +77,7 @@ def login(login_body: LoginTemp, db: Session = Depends(get_db)):
                 is_instructor=False,
                 message=f"Login Successful! Welcome {response.name}"
             )
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid role:")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid role")
     except HTTPException:
         raise
     except Exception as error:

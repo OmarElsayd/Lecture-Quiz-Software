@@ -1,6 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from sqlalchemy.dialects.postgresql.base import ENUM
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, and_
 from sqlalchemy.orm import relationship
 from db_models.base import Base
@@ -25,6 +26,19 @@ class Users(Base):
     password = Column(String)
     role = Column(ENUM(Role))
     created = Column(DateTime, default=datetime.utcnow)
+    
+    
+class Class(Base):
+    __tablename__ = 'class'
+    
+    id = Column(Integer, primary_key=True)
+    class_name = Column(String(50))
+    course_code = Column(String(50))
+    instructor_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    created = Column(DateTime, default=datetime.utcnow)
+    student_list = Column(JSONB)
+    
+    user = relationship("Users")
 
 
 class Lectures(Base):
@@ -32,6 +46,7 @@ class Lectures(Base):
     
     id = Column(Integer, primary_key=True)
     lecture_name = Column(String)
+    class_id = Column(Integer, ForeignKey('class.id'), nullable=False)
     lecture_date = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     is_instructor = Column(Boolean, unique=False, default=False)
@@ -39,6 +54,7 @@ class Lectures(Base):
     created = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("Users")
+    class_ = relationship("Class")
 
     @classmethod
     def if_is_instructor(cls, session, lecture_id):
