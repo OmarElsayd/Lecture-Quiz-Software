@@ -9,6 +9,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { StudentsComponent } from './students/students.component';
 import { InstructorComponent } from './instructor/instructor.component';
+import { CreateQuizComponent } from './instructor/create-quiz/create-quiz.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CalendarModule} from 'primeng/calendar';
 
 
 @NgModule({
@@ -17,13 +21,17 @@ import { InstructorComponent } from './instructor/instructor.component';
     LoginComponent,
     RegisterComponent,
     StudentsComponent,
-    InstructorComponent
+    InstructorComponent,
+    CreateQuizComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+    DragDropModule,
+    CalendarModule
   ],
   exports: [],
   providers: [],
