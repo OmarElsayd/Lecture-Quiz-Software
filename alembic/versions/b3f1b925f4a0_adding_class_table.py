@@ -1,8 +1,8 @@
-"""add_db_table
+"""adding_class_table
 
-Revision ID: 1a41b2982ceb
+Revision ID: b3f1b925f4a0
 Revises: 
-Create Date: 2023-02-03 14:05:43.628605
+Create Date: 2023-02-10 08:23:14.138938
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '1a41b2982ceb'
+revision = 'b3f1b925f4a0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,20 +32,33 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True),
     sa.Column('email', sa.String(length=50), nullable=True),
-    sa.Column('password', sa.String(length=50), nullable=True),
+    sa.Column('password', sa.String(), nullable=True),
     sa.Column('role', postgresql.ENUM('INSTRUCTOR', 'STUDENT', 'TA', name='role'), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    schema='lqs'
+    )
+    op.create_table('class',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('class_name', sa.String(length=50), nullable=True),
+    sa.Column('course_code', sa.String(length=50), nullable=True),
+    sa.Column('instructor_id', sa.Integer(), nullable=False),
+    sa.Column('created', sa.DateTime(), nullable=True),
+    sa.Column('student_list', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+    sa.ForeignKeyConstraint(['instructor_id'], ['lqs.users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     schema='lqs'
     )
     op.create_table('lectures',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('lecture_name', sa.String(), nullable=True),
+    sa.Column('class_id', sa.Integer(), nullable=False),
     sa.Column('lecture_date', sa.String(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('is_instructor', sa.Boolean(), nullable=True),
     sa.Column('number_of_students', sa.Integer(), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['class_id'], ['lqs.class.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['lqs.users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     schema='lqs'
@@ -107,6 +120,7 @@ def downgrade() -> None:
     op.drop_table('questions', schema='lqs')
     op.drop_table('quizzes', schema='lqs')
     op.drop_table('lectures', schema='lqs')
+    op.drop_table('class', schema='lqs')
     op.drop_table('users', schema='lqs')
     op.drop_table('answer_lists', schema='lqs')
     # ### end Alembic commands ###

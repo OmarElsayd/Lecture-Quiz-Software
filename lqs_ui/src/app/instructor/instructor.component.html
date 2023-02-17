@@ -1,0 +1,34 @@
+<head>
+    <link rel="stylesheet" type="text/scss" href="instructor.component.scss">
+</head>
+
+<!-- Toolbar -->
+<div class="toolbar" role="banner">
+    <div id="logo1">
+        <img width="100" style="margin: 0 16px;" alt="lqs Logo" src="assets/b.png" />
+    </div>
+    <div class="admindash">
+    <span>Instructor Dashbaord</span>
+    </div>
+    <button class="admin_button" (click)="admin_console()">Amdin Consule</button>
+</div>
+
+<div class="admin_util">
+    <button class="button" (click)="create_a_class()">Create A Class</button>
+    <button class="button" (click)="create_a_quiz()">Create A Quiz</button>
+    <button class="button" (click)="view_classes()">View Classes</button>
+    <button class="button" (click)="view_students()">View Students</button>
+    <button class="button" (click)="view_quizzes()">View Quizzes</button>
+    <button class="button" (click)="view_reports()">View Reports</button>
+</div>
+
+
+<div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">
+    <div class="version" style="position: absolute; left: 15px;">
+        <span>© 2023 LQS </span>
+        <span>V {{version}}</span>
+    </div>
+    <div class="Version_time">
+        <span>{{date}} {{time}}</span>
+    </div>
+</div>

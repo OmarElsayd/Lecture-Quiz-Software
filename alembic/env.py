@@ -1,6 +1,6 @@
 from logging.config import fileConfig
 
-from lqs_database.db_models import db_engine, base, models
+from db_models import db_engine, base, models
 
 
 from alembic import context

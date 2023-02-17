@@ -1,11 +1,13 @@
 import logging
 from enum import Enum
-from typing import Generator, Union
+from typing import Union
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from db_models import set_session
 from db_models.models import Users, Role
+from db_api.local_session import get_db
+from db_api.api_util import get_hashed_password
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("FastAPI app Logging")
@@ -16,14 +18,6 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-
-def get_db() -> Generator:
-    db = set_session.LocalSession()
-    try:
-        yield db
-        db.commit()
-    finally:
-        db.close()
 
 
 class LoginTemp(BaseModel):
@@ -39,14 +33,16 @@ class LoginResponse(BaseModel):
 
     class Config:
         orm_mode = True
+        
 
 
-@router.get(
+
+@router.post(
     "",
     status_code=status.HTTP_200_OK,
     response_model=LoginResponse
 )
-def get_email(login_body: LoginTemp = Depends(), db: Session = Depends(get_db)):
+def login(login_body: LoginTemp, db: Session = Depends(get_db)):
     """
     Get email and password from the user and check if the user is an instructor or a student
     :param login_body:  email and password
@@ -54,13 +50,16 @@ def get_email(login_body: LoginTemp = Depends(), db: Session = Depends(get_db)):
     :return:    status, role, message
     """
     try:
+        password = get_hashed_password(login_body.password)
+        
         response = (db.query(Users)
                     .filter(Users.email == login_body.email)
-                    .filter(Users.password == login_body.password)
+                    .filter(Users.password == password)
                     .first())
         if not response:
-            login_response = LoginResponse(message="Not a user. Please register")
+            login_response = LoginResponse(message="Incorrect email or password")
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(login_response.message))
+        
         if response.role.value in (
                 Role.INSTRUCTOR.value,
                 Role.TA.value
@@ -78,7 +77,7 @@ def get_email(login_body: LoginTemp = Depends(), db: Session = Depends(get_db)):
                 is_instructor=False,
                 message=f"Login Successful! Welcome {response.name}"
             )
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid role:")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid role")
     except HTTPException:
         raise
     except Exception as error:
