@@ -1,13 +1,19 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, Subject, throwError } from 'rxjs';
+import { WebSocketSubject } from 'rxjs/webSocket';
 import { baseUrl } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
-  constructor(private http: HttpClient) { }
+  quizWebSocket!: WebSocketSubject<any>;
+  lobbyWebSocket!: WebSocketSubject<any>;
+
+  constructor(private http: HttpClient) {
+    this.connectToQuizWebSocket();
+   }
 
   login(data: any):Observable<any>{
     return this.http.post(`${baseUrl}/login`, data)
@@ -15,8 +21,13 @@ export class AuthServiceService {
       map(data => data),
       catchError(this.handleError)
     );
-
-
+  }
+  create_quiz(data: any):Observable<any>{
+    return this.http.put(`${baseUrl}/instructor/create_quiz`, data)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError)
+    );
   }
 
   register(data: any):Observable<any>{
@@ -26,10 +37,35 @@ export class AuthServiceService {
       catchError(this.handleError)
     );
   }
+  
+  getCourses():Observable<any>{
+    return this.http.get(`${baseUrl}/instructor/all_courses`)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError)
+    );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     alert(error.error.detail);
     return throwError(
       'Something bad happened; please try again later.');
   };
+
+  
+  connectToQuizWebSocket() {
+    this.quizWebSocket = new WebSocketSubject('ws://127.0.0.1:8000/instructor/start_quiz_ws');
+    this.lobbyWebSocket = new WebSocketSubject('ws://127.0.0.1:8000/students/lobby_wait_ws');
+  }
+
+  start_quiz() {
+    this.quizWebSocket.next('start');
+    console.log(this.quizWebSocket);
+  }
+
+  addStudentToLobby() {
+    this.lobbyWebSocket.next('add_one');
+    console.log(this.lobbyWebSocket);
+  }
 }

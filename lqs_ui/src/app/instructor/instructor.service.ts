@@ -23,4 +23,8 @@ export class InstructorService {
     return throwError(
       'Something bad happened; please try again later.');
   };
+
+  deleteStudent(studentId: number) {
+    return this.http.delete(`${baseUrl}/instructor/deleteStudent?student_id=${studentId}`);
+  }
 }

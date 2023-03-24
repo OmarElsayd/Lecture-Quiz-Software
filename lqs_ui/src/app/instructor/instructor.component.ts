@@ -22,7 +22,6 @@ export class InstructorComponent {
   create_a_quiz(){
     window.location.href = '/create_quiz';
   }
-
   view_classes(){
     window.location.href = '/view_classes';
   }
@@ -30,17 +29,7 @@ export class InstructorComponent {
     window.location.href = '/view_quizzes';
   }
   view_students(){
-    this.Service.get_all_students().subscribe((data: any) => {
-      this.StudentsData = data;
-      if (this.StudentsData.error){
-        alert(this.StudentsData.error);
-      }
-  }
-  );
-    // window.location.href = '/view_students';
-    if (this.StudentsData){
-      console.log(this.StudentsData);
-    }
+    window.location.href = '/view_students';  
   }
   admin_console(){
     window.location.href = '/admin_console';

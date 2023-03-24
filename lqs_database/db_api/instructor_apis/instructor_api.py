@@ -1,11 +1,14 @@
+from contextlib import contextmanager
+import json
 import logging
-from db_api.local_session import get_db
-from fastapi import Depends, HTTPException, status
+from db_api.api_util import create_quiz_code, get_hashed_password, validate_email
+from db_api.local_session import get_db, transaction
+from fastapi import Depends, HTTPException, WebSocket, WebSocketDisconnect, status
 from typing import List
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
-from .classes_util import Students, genResponce, ClassInput
-from db_models.models import Class, Users, Role
+from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, Students, TaTemplete, WebSocketManager, genResponce, ClassInput
+from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Users, Role
 from fastapi import APIRouter
 
 
@@ -17,6 +20,8 @@ router = APIRouter(
     tags=["instructor"],
     responses={404: {"description": "Not found"}}
 )
+
+manager = WebSocketManager()
 
 
 
@@ -50,7 +55,6 @@ def get_all_students(session: Session = Depends(get_db)):
         logger.error(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
 
-    
     
 
 @router.delete(
@@ -109,3 +113,152 @@ def create_new_clas(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error{error}")
             
 
+@router.put(
+    "/create_ta",
+    status_code=status.HTTP_200_OK,
+    response_model=genResponce
+)
+def create_ta_user(
+    input_body: TaTemplete,
+    session: Session = Depends(get_db)
+):
+    if not input_body.name or not input_body.email or not input_body.password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Name, email and password are required"
+            )
+    if not validate_email(input_body.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid email! Use school email"
+            )
+    password = get_hashed_password(input_body.password)
+    try:
+        new_ta = Users(
+            name=input_body.name,
+            email=input_body.email,
+            password=password,
+            role=Role.TA.value
+            )
+        session.add(new_ta)
+        session.commit()
+        return genResponce(status=True, message="TA created successfully")
+    
+    except HTTPException:
+        raise
+    except Exception as error:
+        logger.error(error)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error {error}")
+    
+    
+@router.put("/create_quiz", status_code=status.HTTP_200_OK, response_model=CreateQuizResponse)
+def create_quiz(
+    quiz_header: CreateQuizInput,
+    questions: List[CreateQuestionInput],
+    session: Session = Depends(get_db)
+):
+    try:
+        class_query = session.query(Class).filter(Class.course_code == quiz_header.class_code).first()
+        with transaction(session) as tx:
+            new_lecture = Lectures(
+                lecture_name=quiz_header.lecture_name,
+                class_id=class_query.id,
+                lecture_date=quiz_header.lecture_date,
+                user_id=class_query.instructor_id,
+            )
+            tx.add(new_lecture)
+            tx.flush()
+            new_quiz_header = Quizzes(
+                quiz_name=create_quiz_code(),
+                number_of_questions=quiz_header.number_of_questions,
+                quiz_duration=quiz_header.quiz_duration,
+                lecture_id=new_lecture.id
+            )
+            tx.add(new_quiz_header)
+            tx.flush()
+
+            quiz_id = new_quiz_header.id
+            quiz_code = new_quiz_header.quiz_name
+
+            for index, question in enumerate(questions):
+                add_question = Questions(
+                    question_order=index,
+                    question_type=QuestionType(question.question_type).name,
+                    question=question.question,
+                    quiz_id=quiz_id,
+                    correct_answer=question.correct_answer
+                )
+                tx.add(add_question)
+                tx.flush()
+                question_id = add_question.id
+
+                if question.question_type == QuestionType.MultipleChoice.value:
+                    option1 = QuestionAnswers(
+                        answer=question.option1,
+                        question_id=question_id
+                    )
+                    option2 = QuestionAnswers(
+                        answer=question.option2,
+                        question_id=question_id
+                    )
+                    option3 = QuestionAnswers(
+                        answer=question.option3,
+                        question_id=question_id
+                    )
+                    option4 = QuestionAnswers(
+                        answer=question.option4,
+                        question_id=question_id
+                    )
+                    tx.add_all([option1, option2, option3, option4])
+                    tx.flush()
+                elif question.question_type == QuestionType.TrueFalse.value:
+                    answer = QuestionAnswers(
+                        answer=question.correct_answer,
+                        question_id=question_id
+                    )
+                    tx.add(answer)
+                    tx.flush()
+
+            return CreateQuizResponse(
+                status=True,
+                message="Quiz created successfully",
+                quiz_id=quiz_id,
+                quiz_code=quiz_code
+                )
+
+    except HTTPException as http_error:
+        raise http_error
+
+    except Exception as error:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error {error}")
+    
+    
+@router.get(
+    "/all_courses",
+    status_code=status.HTTP_200_OK,
+)
+def get_all_courses(session: Session = Depends(get_db)):
+    """
+    
+    """
+    results = session.query(Class.course_code).all()
+    course_codes = [row[0] for row in results] 
+    return course_codes
+    
+    
+@router.websocket("/start_quiz_ws")
+async def start_quiz_ws(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            logger.info("Waiting for event")
+            event = await websocket.receive_text()
+            logger.info(f"Received event: {event}")
+            if event == '"start"':
+                logger.info(f"Received event: {event}")
+                await manager.broadcast(json.dumps({'event': 'start_quiz'}))
+    except WebSocketDisconnect as e:
+        logger.info(f"WebSocket disconnected with code: {e}")
+    finally:
+        await manager.disconnect(websocket)
+        

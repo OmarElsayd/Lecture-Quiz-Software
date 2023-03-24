@@ -1,5 +1,5 @@
 .toolbar {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     right: 0;
@@ -165,4 +165,150 @@
     border: dotted 3px #999;
     min-height: 60px;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .create-quiz-container{
+    position: relative;
+    top: 25px;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .example-container{
+      padding-left: 10px;
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .example-container .example-list{
+      margin: 10px;
+    }
+    .example-container label, input{
+      font-weight: 500;
+      letter-spacing: 2px;
+      margin: 5px;
+    }
+    .example-container input{
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      height: auto;
+      width: auto;
+      min-height: 30px;
+      min-width: 250px;
+      background: #D9D9D9;
+      margin: 5px;
+      box-sizing: border-box;
+    }
+    .example-container button{
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      height: 30px;
+      width: auto;
+      background: #D9D9D9;
+      margin: 5px;
+      box-sizing: border-box;
+    }
+    .example-container button:hover{
+      background: #D9D9D9;
+      opacity: 0.8;
+      cursor: pointer;
+    }
+    .example-container select{
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      height: 30px;
+      width: auto;
+      background: #D9D9D9;
+      margin: 5px;
+      box-sizing: border-box;
+    }
+    .example-container select:hover{
+      background: #D9D9D9;
+      opacity: 0.8;
+      cursor: pointer;
+    }
+    .example-container .question-container h3, h2{
+      display: flex;
+      padding: 5px;
+    }
+    .example-container .question-container{
+      border: #d6d6d6 solid 1px;
+    }
+    .example-container .cdk-drag-placeholder{
+      background-color: #D9D9D9;
+    }
+    .example-container .cdk-drag-{
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      height: 30px;
+      width: auto;
+      background: #D9D9D9;
+      margin: 5px;
+      box-sizing: border-box;
+    }
+  }
+
+  .submit-quiz-container {
+    position: relative;
+    top: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .submit-quiz-container button{
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    height: 45px;
+    width: 150px;
+    background: #3d3d3d;
+    color: #ffffff;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    margin: 20px;
+    box-sizing: border-box;
+    letter-spacing: 5px;
+
+  }
+  .submit-quiz-container button:hover {
+    background: #616060;
+    opacity: 0.8;
+    cursor: pointer;
+  }
+  .quiz-info-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    input{
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      height: auto;
+      width: auto;
+      min-width: 300px;
+      min-height: 50px;
+      background: #D9D9D9;
+      margin: 5px;
+      box-sizing: border-box;
+    }
+    input:hover{
+      background: #D9D9D9;
+      opacity: 0.8;
+      cursor: pointer;
+    }
+    select{
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      height: 30px;
+      width: auto;
+      background: #D9D9D9;
+      margin: 5px;
+      box-sizing: border-box;
+      font-size: medium;
+    }
+    select:hover{
+      background: #D9D9D9;
+      opacity: 0.8;
+      cursor: pointer;
+    }
   }

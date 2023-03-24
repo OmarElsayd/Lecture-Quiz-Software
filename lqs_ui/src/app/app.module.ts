@@ -13,6 +13,16 @@ import { CreateQuizComponent } from './instructor/create-quiz/create-quiz.compon
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CalendarModule} from 'primeng/calendar';
+import { StartQuizComponent } from './instructor/create-quiz/start-quiz/start-quiz.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { OrderByPipe } from './order-by.pipe';
+import { ViewStudentsComponent } from './instructor/view-students/view-students.component';
+import { CreateClassComponent } from './instructor/create-class/create-class.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -22,7 +32,11 @@ import {CalendarModule} from 'primeng/calendar';
     RegisterComponent,
     StudentsComponent,
     InstructorComponent,
-    CreateQuizComponent
+    CreateQuizComponent,
+    StartQuizComponent,
+    OrderByPipe,
+    ViewStudentsComponent,
+    CreateClassComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +45,14 @@ import {CalendarModule} from 'primeng/calendar';
     HttpClientModule,
     BrowserAnimationsModule,
     DragDropModule,
-    CalendarModule
+    CalendarModule,
+    MatRadioModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    FormsModule,
+    MatTableModule,
+    MatSortModule
   ],
   exports: [],
   providers: [],

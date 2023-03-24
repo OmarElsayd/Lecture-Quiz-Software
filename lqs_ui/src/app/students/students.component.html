@@ -7,18 +7,64 @@
     <div id="logo1">
         <img width="100" style="margin: 0 16px;" alt="lqs Logo" src="assets/b.png" />
     </div>
-    <span>WELCOME</span>
-    <div class="spacer"></div>
+    <div *ngIf="quizData" class="QuizInfo">
+    <p>{{ quizData.quiz_header.lecture_name }}</p>
+      <p>{{ quizData.quiz_header.number_of_questions }} questions, {{ quizData.quiz_header.quiz_duration }} minutes</p>
+    </div>  
+    <div *ngIf="remainingTime >= 0" class="QuizInfo" style="min-width: 100px;">
+      <mat-card-subtitle *ngIf="remainingTime >= 0">Time remaining: {{ getFormattedTime() }}</mat-card-subtitle>
+    </div>
+
 </div>
 
 
-<div class="content" role="main">
+<div *ngIf="!isHideQuizCodePart" class="content" role="main">
     <div class="QuizCodeDive">
-        <input type="text" class="TextBoxRegister" name="PWTB" placeholder=" Enter Quiz Code">
-        <button class="button">Start</button>
+        <input type="text" [(ngModel)]="quizCode" class="TextBoxRegister" name="PWTB" placeholder=" Enter Quiz Code">
+        <button class="button" (click)="get_quiz()">JOIN</button>
     </div>
+</div>
 
+<div *ngIf="quizStarted" class="QuizCodeDive">
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  
+    <!-- Display the quiz data if it exists -->
+    <form *ngIf="quizData" (submit)="submitQuiz($event)" style="min-width: 600px;">
+      <mat-card>
 
+        <mat-card-content>
+          <div *ngFor="let question of quizData.questions | orderBy:'question_order'">
+            <h3>{{ question.question_order + 1 }}. {{ question.question }}</h3>
+  
+            <ng-container *ngIf="question.question_type === 'Multiple Choice'">
+              <mat-radio-group [(ngModel)]="answers[question.question_order]" [name]="'question' + question.question_order" required>
+                <mat-radio-button *ngFor="let option of [question.option1, question.option2, question.option3, question.option4]" [value]="option">
+                  {{ option }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </ng-container>
+  
+            <ng-container *ngIf="question.question_type === 'Short Answer'">
+              <mat-form-field>
+                <input matInput type="text" [(ngModel)]="answers[question.question_order]" [name]="'question' + question.question_order" required>
+              </mat-form-field>
+            </ng-container>
+  
+            <ng-container *ngIf="question.question_type === 'True or False'">
+              <mat-radio-group [(ngModel)]="answers[question.question_order]" [name]="'question' + question.question_order" required>
+                <mat-radio-button value="true">True</mat-radio-button>
+                <mat-radio-button value="false">False</mat-radio-button>
+              </mat-radio-group>
+            </ng-container>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button type="submit">Submit Quiz</button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+  
     <div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">
         <div class="version" style="position: absolute; left: 15px;">
             <span>© 2023 LQS </span>

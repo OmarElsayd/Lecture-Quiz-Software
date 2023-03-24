@@ -80,3 +80,29 @@
     opacity: 0.6;
     cursor: pointer;
 }
+
+.QuizInfo {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+    width: 500px;
+    background: #f1f1f1;
+    font-size: 18px;
+    margin: 10px auto;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  .QuizInfo p {
+    margin: 0;
+  }
+  
+  .QuizInfo p:first-of-type {
+    font-weight: bold;
+  }
