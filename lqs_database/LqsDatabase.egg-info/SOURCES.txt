@@ -5,8 +5,14 @@ LqsDatabase.egg-info/dependency_links.txt
 LqsDatabase.egg-info/requires.txt
 LqsDatabase.egg-info/top_level.txt
 db_api/__init__.py
+db_api/api_util.py
+db_api/local_session.py
 db_api/login.py
 db_api/main.py
+db_api/register.py
+db_api/instructor_apis/__init__.py
+db_api/instructor_apis/classes_util.py
+db_api/instructor_apis/instructor_api.py
 db_models/__init__.py
 db_models/base.py
 db_models/db_engine.py

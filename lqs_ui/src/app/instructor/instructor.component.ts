@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { InstructorService } from './instructor.service';
+
 
 @Component({
   selector: 'app-instructor',
@@ -10,13 +12,16 @@ export class InstructorComponent {
   date = new Date().toLocaleDateString();
   time = new Date().toLocaleTimeString();
   version = '1.0.0';
+
+  StudentsData: any;
+  constructor(private Service: InstructorService) {}
+
   create_a_class(){
     window.location.href = '/create_class';
   }
   create_a_quiz(){
     window.location.href = '/create_quiz';
   }
-
   view_classes(){
     window.location.href = '/view_classes';
   }
@@ -24,7 +29,7 @@ export class InstructorComponent {
     window.location.href = '/view_quizzes';
   }
   view_students(){
-    window.location.href = '/view_students';
+    window.location.href = '/view_students';  
   }
   admin_console(){
     window.location.href = '/admin_console';

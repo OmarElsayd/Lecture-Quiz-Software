@@ -1,5 +1,7 @@
 import logging
 from . import login, register
+from .instructor_apis import instructor_api
+from .students_api import student_api
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -28,3 +30,5 @@ app.add_middleware(
 
 app.include_router(login.router)
 app.include_router(register.router)
+app.include_router(instructor_api.router)
+app.include_router(student_api.router)

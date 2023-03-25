@@ -15,6 +15,7 @@ export class LoginComponent {
   email!: string;
   password!: string;
 
+
   data: any;
   constructor(private authService: AuthServiceService) {}
 
