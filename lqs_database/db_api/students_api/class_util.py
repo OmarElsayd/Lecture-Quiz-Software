@@ -6,13 +6,6 @@ class Choice(BaseModel):
     text: str
     isCorrect: bool
     
-class Question(BaseModel):
-    type: str
-    question: str
-    choices: List[Choice] = None
-    answer: str = None
-    answerBoolean: bool = None
-    
 class QuizHeader(BaseModel):
     number_of_questions: int
     quiz_duration: int
@@ -21,6 +14,7 @@ class QuizHeader(BaseModel):
     lecture_date: str
     
 class QuestionsResponces(BaseModel):
+    question_id: int
     question_order: int
     question_type: str
     question: str
@@ -33,3 +27,13 @@ class QuestionsResponces(BaseModel):
 class Quiz(BaseModel):
     quiz_header: QuizHeader
     questions: List[QuestionsResponces]
+
+class QuizAnswers(BaseModel):
+    quiz_id: int
+    question_id: int
+    answer: Union[str, None]
+    correct_answer: Union[str, None]
+    
+class UserInfo(BaseModel):
+    user_id: int
+    user_name: str

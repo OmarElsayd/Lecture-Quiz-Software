@@ -1,15 +1,13 @@
-from contextlib import contextmanager
 import json
 import logging
-
 from db_api.instructor_apis.classes_util import WebSocketManager
-from db_api.local_session import get_db, transaction
+from db_api.local_session import get_db
 from fastapi import Depends, HTTPException, WebSocket, WebSocketDisconnect, status
 from typing import List
 from sqlalchemy import delete
-from .class_util import QuestionsResponces, QuizHeader, Quiz, Choice, Question
+from .class_util import QuestionsResponces, QuizAnswers, QuizHeader, Quiz, UserInfo
 from sqlalchemy.orm import Session
-from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Users, Role
+from db_models.models import Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses
 from fastapi import APIRouter
 
 logging.basicConfig(level=logging.INFO)
@@ -64,6 +62,7 @@ def get_quiz(
                 options = [answer.answer for answer in question_answer]
                 send_quiz.questions.append(
                     QuestionsResponces(
+                        question_id=question.id,
                         question_order=question.question_order,
                         question_type=question.question_type.value,
                         question=question.question,
@@ -77,6 +76,7 @@ def get_quiz(
             else:
                 send_quiz.questions.append(
                     QuestionsResponces(
+                        question_id = question.id,
                         question_order=question.question_order,
                         question_type=question.question_type.value,
                         question=question.question,
@@ -108,3 +108,41 @@ async def lobby_wait_ws(websocket: WebSocket):
         logger.info(f"WebSocket disconnected with code: {e}")
     finally:
         await manager.disconnect(websocket)
+        
+        
+@router.put(
+    "/submit_quiz",
+    status_code=status.HTTP_200_OK,
+)
+def submit_quiz(quiz_answer_body: List[QuizAnswers], user_info: UserInfo, session: Session = Depends(get_db)):
+    """_summary_
+
+    Args:
+        quiz_body (List[QuizAnswers]): _description_
+        session (Session, optional): _description_. Defaults to Depends(get_db).
+    """
+    if not quiz_answer_body:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No quiz answers provided")
+    
+    check_quiz_duplicate = session.query(Responses).filter(Responses.user_id == user_info.user_id).filter(Responses.quiz_id == quiz_answer_body[0].quiz_id).first()
+    if check_quiz_duplicate:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Quiz already submitted")
+    
+    try:
+        with session.begin():
+            for answer in quiz_answer_body:
+                is_correct = True if answer.answer == answer.correct_answer else False
+                session.add(
+                    Responses(
+                        user_id=user_info.user_id,
+                        question_id=answer.question_id,
+                        answer=answer.answer,
+                        iscorrect=is_correct,
+                        quiz_id=answer.quiz_id
+                    )
+                )
+        return {"message": "Quiz submitted successfully"}
+    except HTTPException as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {e}")
+            
+            

@@ -9,25 +9,25 @@ import { Subscription, timer } from 'rxjs';
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.scss']
 })
-export class StudentsComponent implements OnInit{
+export class StudentsComponent implements OnInit {
   title = 'lqs_ui';
   date = new Date().toLocaleDateString();
   time = new Date().toLocaleTimeString();
   version = '1.0.0';
-  quizCode! : string;
+  quizCode!: string;
   quizData!: QuizData;
   errorMessage: string | null = null;
-  answers: { [index: number]: string } = {};
+  answers: { [index: number]: { user_answer: string, correct_answer: string, question_id: number} } = {};
   quizStarted: boolean = false;
   isHideQuizCodePart: boolean = false;
+  quizCompleted: boolean = false;
   startQuizTime!: Date;
   remainingTime!: number;
   timerSubscription!: Subscription;
 
-
   constructor(private studentService: StudentServicesService, private quizService: AuthServiceService) { }
 
-  join_quiz(){
+  join_quiz() {
     console.log(this.quizCode);
   }
 
@@ -45,6 +45,7 @@ export class StudentsComponent implements OnInit{
       (error) => console.error(error)
     );
   }
+  
 
   get_quiz() {
     this.studentService.getQuiz(this.quizCode).subscribe(
@@ -55,10 +56,19 @@ export class StudentsComponent implements OnInit{
         if (this.quizData.questions.length === 0) {
           this.errorMessage = 'No questions found';
         }
-        if (data){
+        if (data) {
           this.isHideQuizCodePart = true;
           this.quizService.addStudentToLobby();
           this.quizService.lobbyWebSocket.subscribe();
+  
+          // Initialize answers object for each question
+          for (let question of this.quizData.questions) {
+            this.answers[question.question_id] = {
+              user_answer: '',
+              correct_answer: question.correct_answer,
+              question_id: question.question_id,
+            };
+          }
         }
       },
       (error) => {
@@ -75,7 +85,13 @@ export class StudentsComponent implements OnInit{
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-    // Submit the quiz
+    
+    const answerList: any[] = Object.values(this.answers).map(answer => ({
+      ...answer,
+      quizId: localStorage.getItem('quiz_id'),
+    }));
+  
+    console.log("Answer List:", answerList);
   }
 
   getFormattedTime() {
@@ -94,6 +110,4 @@ export class StudentsComponent implements OnInit{
       }
     });
   }
-
-
 }

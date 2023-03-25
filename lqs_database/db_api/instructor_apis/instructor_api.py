@@ -91,6 +91,11 @@ def create_new_clas(
     input_body: ClassInput,
     session: Session = Depends(get_db)
 ):
+    if session.query(Class).filter(Class.course_code == input_body.course_code).first():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Course code already exists"
+            )
     try:
         if not input_body.class_name or not input_body.course_code:
             raise HTTPException(
@@ -261,4 +266,5 @@ async def start_quiz_ws(websocket: WebSocket):
         logger.info(f"WebSocket disconnected with code: {e}")
     finally:
         await manager.disconnect(websocket)
+        
         

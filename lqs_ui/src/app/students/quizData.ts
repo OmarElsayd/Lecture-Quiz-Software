@@ -8,6 +8,7 @@ export interface QuizData {
     },
     questions: {
         index: number;
+        question_id: number;
         question_type: string;
         question: string;
         correct_answer: string;

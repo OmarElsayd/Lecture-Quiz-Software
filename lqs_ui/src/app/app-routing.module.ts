@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'create_quiz', component: CreateQuizComponent },
   { path: 'start_quiz', component: StartQuizComponent},
   { path: 'view_students', component: ViewStudentsComponent},
-  { path: 'create_clase', component: CreateClassComponent}
+  { path: 'create_class', component: CreateClassComponent}
 ];
 
 @NgModule({

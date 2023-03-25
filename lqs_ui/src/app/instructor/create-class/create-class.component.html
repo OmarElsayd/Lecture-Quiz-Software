@@ -1,24 +1,41 @@
 <head>
     <link rel="stylesheet" type="text/scss" href="create-class.component.scss">
-</head>
-
-<!-- Toolbar -->
-<div class="toolbar" role="banner">
+  </head>
+  
+  <!-- Toolbar -->
+  <div class="toolbar" role="banner">
     <div id="logo1">
-        <img width="100" style="margin: 0 16px;" alt="lqs Logo" src="assets/b.png" />
+      <img width="100" style="margin: 0 16px;" alt="lqs Logo" src="assets/b.png" />
     </div>
     <div class="admindash">
-    <span>Instructor Dashbaord</span>
+      <span>Create a Class</span>
     </div>
-</div>
-
-
-<div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">
+  </div>
+  
+  <div class="create-class-form">
+    <form (ngSubmit)="submitCreateClass()">
+      <mat-form-field appearance="outline">
+        <mat-label>Course Code</mat-label>
+        <input matInput [(ngModel)]="courseCode" name="courseCode" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Course Name</mat-label>
+        <input matInput [(ngModel)]="courseName" name="courseName" required />
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit">Create Class</button>
+    </form>
+  </div>
+  
+  <!-- Bottom Toolbar -->
+  <div class="bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">
     <div class="version" style="position: absolute; left: 15px;">
-        <span>© 2023 LQS </span>
-        <span>V {{version}}</span>
+      <span>© 2023 LQS </span>
+      <span>V {{version}}</span>
     </div>
     <div class="Version_time">
-        <span>{{date}} {{time}}</span>
+      <span>{{date}} {{time}}</span>
     </div>
-</div>
+  </div>
+  

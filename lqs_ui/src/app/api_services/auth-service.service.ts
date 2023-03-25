@@ -46,6 +46,14 @@ export class AuthServiceService {
     );
   }
 
+  create_class(data: any):Observable<any>{
+    return this.http.post(`${baseUrl}/instructor/NewClass`, data)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError)
+    );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     alert(error.error.detail);
@@ -68,4 +76,9 @@ export class AuthServiceService {
     this.lobbyWebSocket.next('add_one');
     console.log(this.lobbyWebSocket);
   }
+
+  submitQuiz(quiz_body: any, user_info: any) {
+  }
+
+
 }

@@ -116,12 +116,14 @@ class Responses(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(ForeignKey('users.id'), nullable=False)
     question_id = Column(ForeignKey('questions.id'), nullable=False)
+    quiz_id = Column(ForeignKey('quizzes.id'), nullable=False)
     answer = Column(String(50))
     iscorrect = Column(Boolean)
     created = Column(DateTime, default=datetime.utcnow)
 
     questions = relationship('Questions')
     users = relationship('Users')
+    quizzes = relationship('Quizzes')
 
 
 class Scores(Base):
