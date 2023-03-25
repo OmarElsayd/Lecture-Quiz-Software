@@ -24,7 +24,10 @@ export class InstructorService {
       'Something bad happened; please try again later.');
   };
 
-  deleteStudent(studentId: number) {
-    return this.http.delete(`${baseUrl}/instructor/deleteStudent?student_id=${studentId}`);
-  }
+  deleteStudent(student: any): Observable<any> {
+    console.log(student);
+    return this.http.delete(`${baseUrl}/instructor/deleteUser`, { body: student }).pipe(
+        catchError(this.handleError)
+    );
+}
 }

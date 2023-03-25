@@ -12,7 +12,7 @@ class Students(BaseModel):
         orm_mode = True
         
         
-class genResponce(BaseModel):
+class genResponse(BaseModel):
     status: bool = False
     message: Union[str, None]
     

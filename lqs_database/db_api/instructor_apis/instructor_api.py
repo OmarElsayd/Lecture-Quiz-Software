@@ -1,14 +1,15 @@
 from contextlib import contextmanager
 import json
 import logging
+import pandas as pd
 from db_api.api_util import create_quiz_code, get_hashed_password, validate_email
 from db_api.local_session import get_db, transaction
-from fastapi import Depends, HTTPException, WebSocket, WebSocketDisconnect, status
+from fastapi import Depends, HTTPException, Response, WebSocket, WebSocketDisconnect, status
 from typing import List
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
-from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, Students, TaTemplete, WebSocketManager, genResponce, ClassInput
-from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Users, Role
+from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, Students, TaTemplete, WebSocketManager, genResponse, ClassInput
+from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses, Users, Role
 from fastapi import APIRouter
 
 
@@ -59,27 +60,25 @@ def get_all_students(session: Session = Depends(get_db)):
 
 @router.delete(
     "/deleteUser",
-    status_code=status.HTTP_200_OK,
-    response_model=genResponce
+    response_model=genResponse
 )
 def delete_user(
     input_body: Students,
-    session: Session = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     try:
-        delete_stmt = (
-            delete(Users).
-            where(Users.email == input_body.email)
-        )
-        resultes = session.execute(delete_stmt)
-        if resultes.rowcount == 0:
+        user = db.query(Users).filter_by(email=input_body.email, name=input_body.name).first()
+        if user is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No student found")
-        return genResponce(status=True, message="Student deleted successfully")
+        db.delete(user)
+        db.commit()
+        return genResponse(status=True, message="Student deleted successfully")
     except HTTPException:
         raise
     except Exception as error:
         logger.error(error)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+
       
       
 @router.post(
@@ -268,3 +267,47 @@ async def start_quiz_ws(websocket: WebSocket):
         await manager.disconnect(websocket)
         
         
+@router.get(
+    "/download_quiz/{quiz_id}",
+    )
+def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
+    """_summary_
+
+    Args:
+        quiz_id (int): _description_
+        session (Session, optional): _description_. Defaults to Depends(get_db).
+    """
+    try:
+        quiz_results = session.query(
+            Users.name.label("Student Name"),
+            Quizzes.id.label("quiz_id"),
+            Quizzes.quiz_name,
+            Quizzes.quiz_duration,
+            Questions.id.label("question_id"),
+            Questions.question_type,
+            Questions.correct_answer,
+            Responses.id.label("response_id"),
+            Responses.user_id,
+            Responses.iscorrect,
+            Responses.answer,
+        ).join(
+            Questions, Questions.quiz_id == Quizzes.id
+        ).join(
+            Responses, Responses.question_id == Questions.id
+        ).join(
+            Users, Users.id == Responses.user_id
+        ).filter(
+            Quizzes.id == int(quiz_id)
+        ).all()
+        
+        logger.info(quiz_results)
+        dataFrame = pd.DataFrame(quiz_results)
+        csv_string = dataFrame.to_csv(index=False)
+
+        response = Response(content=csv_string)
+        response.headers["Content-Disposition"] = "attachment; filename=data.csv"
+        response.headers["Content-Type"] = "text/csv"
+        
+        return response
+    except HTTPException as http_error:
+        raise http_error

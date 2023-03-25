@@ -7,7 +7,7 @@
     <div id="logo1">
         <img width="100" style="margin: 0 16px;" alt="lqs Logo" src="assets/b.png" />
     </div>
-    <div *ngIf="quizData" class="QuizInfo">
+    <div *ngIf="quizDataInfo" class="QuizInfo">
     <p>{{ quizData.quiz_header.lecture_name }}</p>
       <p>{{ quizData.quiz_header.number_of_questions }} questions, {{ quizData.quiz_header.quiz_duration }} minutes</p>
     </div>  
@@ -26,6 +26,11 @@
 </div>
 
 <div *ngIf="quizStarted" class="QuizCodeDive">
+  <div *ngIf="quizCompleted" class="QuizCodeDive">
+    <div *ngIf="quizData" class="QuizInfo">
+      <p>Quiz Completed Thank you!</p>
+    </div>
+  </div>
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
   <!-- Display the quiz data if it exists -->
@@ -37,7 +42,7 @@
           <h3>{{ question.question_order + 1 }}. {{ question.question }}</h3>
         
           <ng-container *ngIf="question.question_type === 'Multiple Choice'">
-            <mat-radio-group [(ngModel)]="answers[question.question_id].user_answer" [name]="'question' + question.question_id" required>
+            <mat-radio-group [(ngModel)]="answers[question.question_id].answer" [name]="'question' + question.question_id" required>
               <mat-radio-button *ngFor="let option of [question.option1, question.option2, question.option3, question.option4]" [value]="option">
                 {{ option }}
               </mat-radio-button>
@@ -46,12 +51,12 @@
         
           <ng-container *ngIf="question.question_type === 'Short Answer'">
             <mat-form-field>
-              <input matInput type="text" [(ngModel)]="answers[question.question_id].user_answer" [name]="'question' + question.question_id" required>
+              <input matInput type="text" [(ngModel)]="answers[question.question_id].answer" [name]="'question' + question.question_id" required>
             </mat-form-field>
           </ng-container>
         
           <ng-container *ngIf="question.question_type === 'True or False'">
-            <mat-radio-group [(ngModel)]="answers[question.question_id].user_answer" [name]="'question' + question.question_id" required>
+            <mat-radio-group [(ngModel)]="answers[question.question_id].answer" [name]="'question' + question.question_id" required>
               <mat-radio-button value="true">True</mat-radio-button>
               <mat-radio-button value="false">False</mat-radio-button>
             </mat-radio-group>
@@ -64,6 +69,8 @@
     </mat-card>
   </form>
 </div>
+
+
 
   
     <div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">

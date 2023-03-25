@@ -40,8 +40,9 @@ export class ViewStudentsComponent implements OnInit {
     }
   }
 
-  deleteStudent(studentId: number) {
-    this.Service.deleteStudent(studentId).subscribe(
+  deleteStudent(student: any) {
+    console.log(student);
+    this.Service.deleteStudent(student).subscribe(
       () => {
         // Refresh the student list after deleting
         this.getStudents();

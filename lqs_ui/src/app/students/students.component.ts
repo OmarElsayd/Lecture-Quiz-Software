@@ -17,13 +17,15 @@ export class StudentsComponent implements OnInit {
   quizCode!: string;
   quizData!: QuizData;
   errorMessage: string | null = null;
-  answers: { [index: number]: { user_answer: string, correct_answer: string, question_id: number} } = {};
+  answers: { [index: number]: { answer: string, correct_answer: string, question_id: number} } = {};
   quizStarted: boolean = false;
   isHideQuizCodePart: boolean = false;
   quizCompleted: boolean = false;
+  quizDataInfo: boolean = false;
   startQuizTime!: Date;
   remainingTime!: number;
   timerSubscription!: Subscription;
+  userInfo = {user_id: localStorage.getItem('user_id')}
 
   constructor(private studentService: StudentServicesService, private quizService: AuthServiceService) { }
 
@@ -60,11 +62,12 @@ export class StudentsComponent implements OnInit {
           this.isHideQuizCodePart = true;
           this.quizService.addStudentToLobby();
           this.quizService.lobbyWebSocket.subscribe();
+          this.quizDataInfo = true;
   
           // Initialize answers object for each question
           for (let question of this.quizData.questions) {
             this.answers[question.question_id] = {
-              user_answer: '',
+              answer: '',
               correct_answer: question.correct_answer,
               question_id: question.question_id,
             };
@@ -88,10 +91,18 @@ export class StudentsComponent implements OnInit {
     
     const answerList: any[] = Object.values(this.answers).map(answer => ({
       ...answer,
-      quizId: localStorage.getItem('quiz_id'),
+      quiz_id: localStorage.getItem('quiz_id'),
     }));
   
     console.log("Answer List:", answerList);
+    this.quizService.submitQuiz(answerList, this.userInfo).subscribe(
+      (data) => {
+        console.log(data);
+        this.quizCompleted = true;
+        this.quizStarted = false;
+        this.quizDataInfo = false;
+      }
+    );
   }
 
   getFormattedTime() {

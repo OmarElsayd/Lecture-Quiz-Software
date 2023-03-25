@@ -29,11 +29,10 @@ class Quiz(BaseModel):
     questions: List[QuestionsResponces]
 
 class QuizAnswers(BaseModel):
-    quiz_id: int
+    quiz_id: str
     question_id: int
     answer: Union[str, None]
     correct_answer: Union[str, None]
     
 class UserInfo(BaseModel):
-    user_id: int
-    user_name: str
+    user_id: str

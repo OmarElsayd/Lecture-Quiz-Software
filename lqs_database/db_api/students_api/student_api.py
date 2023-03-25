@@ -122,25 +122,36 @@ def submit_quiz(quiz_answer_body: List[QuizAnswers], user_info: UserInfo, sessio
         session (Session, optional): _description_. Defaults to Depends(get_db).
     """
     if not quiz_answer_body:
+        logger.info("No quiz answers provided")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No quiz answers provided")
     
-    check_quiz_duplicate = session.query(Responses).filter(Responses.user_id == user_info.user_id).filter(Responses.quiz_id == quiz_answer_body[0].quiz_id).first()
+    logger.info(f"quiz_answer_body: {quiz_answer_body}")
+    logger.info(f"user_info: {user_info}")
+    
+    check_quiz_duplicate = (
+        session.query(Responses)
+        .filter(Responses.user_id == int(user_info.user_id))
+        .filter(Responses.quiz_id == int(quiz_answer_body[0].quiz_id))
+        .first()
+    )
     if check_quiz_duplicate:
+        logger.info(f"Quiz already submitted {check_quiz_duplicate}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Quiz already submitted")
     
     try:
-        with session.begin():
-            for answer in quiz_answer_body:
-                is_correct = True if answer.answer == answer.correct_answer else False
-                session.add(
-                    Responses(
-                        user_id=user_info.user_id,
-                        question_id=answer.question_id,
-                        answer=answer.answer,
-                        iscorrect=is_correct,
-                        quiz_id=answer.quiz_id
-                    )
+        logger.info(f"quiz_answer_body: {quiz_answer_body}")
+        for answer in quiz_answer_body:
+            is_correct = True if answer.answer == answer.correct_answer else False
+            session.add(
+                Responses(
+                    user_id=int(user_info.user_id),
+                    question_id=answer.question_id,
+                    answer=answer.answer,
+                    iscorrect=is_correct,
+                    quiz_id=int(answer.quiz_id)
                 )
+            )
+            session.commit()
         return {"message": "Quiz submitted successfully"}
     except HTTPException as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {e}")

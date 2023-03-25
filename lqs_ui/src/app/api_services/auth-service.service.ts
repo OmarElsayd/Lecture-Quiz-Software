@@ -46,7 +46,7 @@ export class AuthServiceService {
     );
   }
 
-  create_class(data: any):Observable<any>{
+  create_class(data: any){
     return this.http.post(`${baseUrl}/instructor/NewClass`, data)
     .pipe(
       map(data => data),
@@ -77,7 +77,14 @@ export class AuthServiceService {
     console.log(this.lobbyWebSocket);
   }
 
-  submitQuiz(quiz_body: any, user_info: any) {
+  submitQuiz(quiz_answer_body: any, user_info: any):Observable<any> {
+    let data = { quiz_answer_body, user_info };
+    console.log(data);
+    return this.http.put(`${baseUrl}/students/submit_quiz`, data)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError)
+    );
   }
 
 
