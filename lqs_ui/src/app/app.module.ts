@@ -23,6 +23,10 @@ import { ViewStudentsComponent } from './instructor/view-students/view-students.
 import { CreateClassComponent } from './instructor/create-class/create-class.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { ViewQuizComponent } from './instructor/view-quiz/view-quiz.component';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 
 
 @NgModule({
@@ -36,7 +40,8 @@ import { MatSortModule } from '@angular/material/sort';
     StartQuizComponent,
     OrderByPipe,
     ViewStudentsComponent,
-    CreateClassComponent
+    CreateClassComponent,
+    ViewQuizComponent
   ],
   imports: [
     BrowserModule,
@@ -52,10 +57,14 @@ import { MatSortModule } from '@angular/material/sort';
     MatCardModule,
     FormsModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    ToastModule,
+    MessageService
   ],
   exports: [],
-  providers: [],
+  providers: [
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

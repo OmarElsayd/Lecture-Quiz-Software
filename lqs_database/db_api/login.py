@@ -26,6 +26,7 @@ class LoginTemp(BaseModel):
 
 
 class LoginResponse(BaseModel):
+    user_id: int
     status: bool = False
     is_instructor: bool = False
     role: Union[Enum, None] = None
@@ -65,6 +66,7 @@ def login(login_body: LoginTemp, db: Session = Depends(get_db)):
                 Role.TA.value
         ):
             return LoginResponse(
+                user_id=response.id,
                 status=True,
                 role=response.role,
                 is_instructor=True,
@@ -72,6 +74,7 @@ def login(login_body: LoginTemp, db: Session = Depends(get_db)):
             )
         if response.role.value == Role.STUDENT.value:
             return LoginResponse(
+                user_id=response.id,
                 status=True,
                 role=response.role,
                 is_instructor=False,

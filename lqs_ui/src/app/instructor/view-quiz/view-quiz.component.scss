@@ -1,0 +1,93 @@
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  background-color: #E1E0DD;
+  color: black;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 15px;
+  z-index: 2;
+}
+
+#logo1 {
+  img {
+    width: 100px;
+    margin: 0 16px;
+  }
+}
+
+.admindash {
+  margin-left: auto;
+  margin-right: 16px;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.Bottom_toolbar {
+  position: fixed;
+  color: black;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  background-color: #E1E0DD;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: bold;
+}
+
+.version {
+  position: absolute;
+  left: 15px;
+  margin-left: 16px;
+}
+
+.Version_time {
+  margin-right: 16px;
+}
+
+.table-container {
+  padding: 2rem;
+  max-width: 1500px;
+  margin: 120px auto 0;
+  margin-bottom: 25px;
+}
+
+.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.mat-header-cell,
+.mat-cell {
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #f2f2f2;
+}
+
+button {
+  margin: 2px;
+}
+
+.mat-mdc-table {
+  table-layout: auto;
+  white-space: normal;
+  margin-bottom: 35px;
+  border-radius: 5px;
+}

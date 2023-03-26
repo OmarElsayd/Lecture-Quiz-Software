@@ -87,5 +87,19 @@ export class AuthServiceService {
     );
   }
 
+  getAllQuizzes():Observable<any>{
+    return this.http.get(`${baseUrl}/instructor/all_quizes`)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError)
+    )
+  }
+
+  downloadQuizReport(quiz_id: any): Observable<Blob> {
+    return this.http.get(`${baseUrl}/instructor/download_quiz/${quiz_id}`, { responseType: 'blob' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
 
 }

@@ -13,6 +13,5 @@ setuptools.setup(
         "fastapi",
         "uvicorn",
         "alembic",
-        "psycopg2",
         ]
     )

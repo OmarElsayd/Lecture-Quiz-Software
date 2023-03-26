@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+from datetime import datetime
 import json
 import logging
 import pandas as pd
@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, Response, WebSocket, WebSocketDiscon
 from typing import List
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
-from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, Students, TaTemplete, WebSocketManager, genResponse, ClassInput
+from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, QuizData, Students, TaTemplete, WebSocketManager, genResponse, ClassInput
 from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses, Users, Role
 from fastapi import APIRouter
 
@@ -84,7 +84,7 @@ def delete_user(
 @router.post(
     "/NewClass",
     status_code=status.HTTP_200_OK,
-    response_model=genResponce
+    response_model=genResponse
 )
 def create_new_clas(
     input_body: ClassInput,
@@ -109,7 +109,7 @@ def create_new_clas(
         )
         session.add(new_class)
         session.commit()
-        return genResponce(status=True, message="Class created successfully")
+        return genResponse(status=True, message="Class created successfully")
     except HTTPException:
         raise
     except Exception as error:
@@ -120,7 +120,7 @@ def create_new_clas(
 @router.put(
     "/create_ta",
     status_code=status.HTTP_200_OK,
-    response_model=genResponce
+    response_model=genResponse
 )
 def create_ta_user(
     input_body: TaTemplete,
@@ -146,7 +146,7 @@ def create_ta_user(
             )
         session.add(new_ta)
         session.commit()
-        return genResponce(status=True, message="TA created successfully")
+        return genResponse(status=True, message="TA created successfully")
     
     except HTTPException:
         raise
@@ -269,6 +269,7 @@ async def start_quiz_ws(websocket: WebSocket):
         
 @router.get(
     "/download_quiz/{quiz_id}",
+    status_code=status.HTTP_200_OK,
     )
 def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
     """_summary_
@@ -278,10 +279,11 @@ def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
         session (Session, optional): _description_. Defaults to Depends(get_db).
     """
     try:
+        logger.info(quiz_id)
         quiz_results = session.query(
             Users.name.label("Student Name"),
-            Quizzes.id.label("quiz_id"),
-            Quizzes.quiz_name,
+            Quizzes.id.label("quiz id"),
+            Quizzes.quiz_name.label("Quiz Name"),
             Quizzes.quiz_duration,
             Questions.id.label("question_id"),
             Questions.question_type,
@@ -311,3 +313,40 @@ def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
         return response
     except HTTPException as http_error:
         raise http_error
+    
+    
+    
+@router.get(
+    "/all_quizes",
+    response_model=list[QuizData],
+    status_code=status.HTTP_200_OK
+)
+def get_all_quizes(session: Session = Depends(get_db)):
+    """_summary_
+
+    Args:
+        quiz_id (int): _description_
+        session (Session, optional): _description_. Defaults to Depends(get_db).
+    """
+    try:
+        all_quzzies = session.query(Quizzes).all()
+        
+        if not all_quzzies:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No Quizzes Found")
+        
+        quiz_list = []
+        for quiz in all_quzzies:
+            formatted_date = quiz.created.strftime("%m-%d-%Y")
+            quiz_list.append(QuizData(
+                quiz_id=quiz.id,
+                quiz_name=quiz.quiz_name,
+                number_of_questions=quiz.number_of_questions,
+                quiz_duration=quiz.quiz_duration,
+                lecture_id=quiz.lecture_id,
+                created_date=formatted_date
+            ))
+        logger.info(f"all quiz list: {quiz_list}")
+            
+        return quiz_list
+    except HTTPException as error:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal server error: {error}")

@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 from fastapi import WebSocket
 from pydantic import BaseModel
@@ -66,6 +67,14 @@ class CreateQuestionInput(BaseModel):
 
     class Config:
         orm_mode = True
+        
+class QuizData(BaseModel):
+    quiz_id: int
+    quiz_name: str
+    number_of_questions: int
+    quiz_duration: int
+    lecture_id: int
+    created_date: str
         
         
 class WebSocketManager:

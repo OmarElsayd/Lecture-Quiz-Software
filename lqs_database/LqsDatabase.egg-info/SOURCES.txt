@@ -13,6 +13,9 @@ db_api/register.py
 db_api/instructor_apis/__init__.py
 db_api/instructor_apis/classes_util.py
 db_api/instructor_apis/instructor_api.py
+db_api/students_api/__init__.py
+db_api/students_api/class_util.py
+db_api/students_api/student_api.py
 db_models/__init__.py
 db_models/base.py
 db_models/db_engine.py

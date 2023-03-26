@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AuthServiceService } from '../api_services/auth-service.service';
+import { ToastHandlerService } from '../toastHandle/toast-handler.service'
 
 
 @Component({
@@ -17,11 +18,11 @@ export class LoginComponent {
 
 
   data: any;
-  constructor(private authService: AuthServiceService) {}
+  constructor(private authService: AuthServiceService, private ToastHandlerService: ToastHandlerService) {}
 
   LoginProsses() {
     if (this.email == undefined || this.email == ''){
-      alert('Email is required');
+      this.ToastHandlerService.showToast("error", "Error", "Email is requied")
       return;
     } 
     if (this.password == undefined || this.password == ''){
@@ -36,12 +37,24 @@ export class LoginComponent {
       if (this.data.status){
         alert(this.data.message);
         if (this.data.role == 'STUDENT'){
+          if (localStorage.getItem('user_id')){
+            localStorage.getItem('user_id')
+          }
+          localStorage.setItem('user_id', data.user_id);
           window.location.href = '/student_dash';
         }
         else if (this.data.role == 'INSTRUCTOR'){
+          if (localStorage.getItem('user_id')){
+            localStorage.getItem('user_id')
+          }
+          localStorage.setItem('user_id', data.user_id);
           window.location.href = '/instructor_dash';
         }
         else if (this.data.role == 'TA'){
+          if (localStorage.getItem('user_id')){
+            localStorage.getItem('user_id')
+          }
+          localStorage.setItem('user_id', data.user_id);
           window.location.href = '/ta_dash';
         }
       }

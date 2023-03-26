@@ -4,6 +4,7 @@ import { CreateClassComponent } from './instructor/create-class/create-class.com
 import { CreateQuizComponent } from './instructor/create-quiz/create-quiz.component';
 import { StartQuizComponent } from './instructor/create-quiz/start-quiz/start-quiz.component';
 import { InstructorComponent } from './instructor/instructor.component';
+import { ViewQuizComponent } from './instructor/view-quiz/view-quiz.component';
 import { ViewStudentsComponent } from './instructor/view-students/view-students.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'create_quiz', component: CreateQuizComponent },
   { path: 'start_quiz', component: StartQuizComponent},
   { path: 'view_students', component: ViewStudentsComponent},
-  { path: 'create_class', component: CreateClassComponent}
+  { path: 'create_class', component: CreateClassComponent},
+  { path: 'view_quizzies', component: ViewQuizComponent}
 ];
 
 @NgModule({

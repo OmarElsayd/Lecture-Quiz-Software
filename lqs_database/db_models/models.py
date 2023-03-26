@@ -27,7 +27,7 @@ class Users(Base):
     name = Column(String(50))
     email = Column(String(50))
     password = Column(String)
-    role = Column(ENUM(Role))
+    role = Column(ENUM(Role, name="role"))
     created = Column(DateTime, default=datetime.utcnow)
     
     
@@ -90,7 +90,7 @@ class Questions(Base):
 
     id = Column(Integer, primary_key=True)
     question_order = Column(Integer)
-    question_type = Column(ENUM(QuestionType))
+    question_type = Column(ENUM(QuestionType, name="question_type"))
     question = Column(String(50))
     correct_answer = Column(String(50))
     quiz_id = Column(ForeignKey('quizzes.id'), nullable=False)

@@ -14,7 +14,7 @@ export class InstructorComponent {
   version = '1.0.0';
 
   StudentsData: any;
-  constructor(private Service: InstructorService) {}
+  constructor() {}
 
   create_a_class(){
     window.location.href = '/create_class';
@@ -26,16 +26,13 @@ export class InstructorComponent {
     window.location.href = '/view_classes';
   }
   view_quizzes(){
-    window.location.href = '/view_quizzes';
+    window.location.href = '/view_quizzies';
   }
   view_students(){
     window.location.href = '/view_students';  
   }
   admin_console(){
     window.location.href = '/admin_console';
-  }
-  view_reports(){ 
-    window.location.href = '/view_reports';
   }
 }
 
