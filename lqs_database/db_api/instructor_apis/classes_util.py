@@ -14,7 +14,7 @@ class Students(BaseModel):
         
         
 class genResponse(BaseModel):
-    status: bool = False
+    status: str
     message: Union[str, None]
     
     class Config:
@@ -37,7 +37,7 @@ class TaTemplete(BaseModel):
         orm_mode = True
         
 class CreateQuizResponse(BaseModel):
-    status: bool = False
+    status: str
     message: Union[str, None]
     quiz_id: Union[int, None]
     quiz_code: Union[str, None]

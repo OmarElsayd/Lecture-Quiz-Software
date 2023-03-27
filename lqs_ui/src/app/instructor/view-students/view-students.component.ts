@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { InstructorService } from '../instructor.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
+import { ToastConfig } from 'src/app/toastHandle/toast-config';
 
 interface Student {
   email: string;
@@ -23,7 +25,7 @@ export class ViewStudentsComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private Service: InstructorService) {}
+  constructor(private Service: InstructorService, private ToastHandlerService: ToastHandlerService) {}
 
   ngOnInit(): void {
     this.getStudents();
@@ -46,6 +48,8 @@ export class ViewStudentsComponent implements OnInit {
       () => {
         // Refresh the student list after deleting
         this.getStudents();
+        this.ToastHandlerService.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, "Success");
+
       },
       (error) => {
         console.error(error);

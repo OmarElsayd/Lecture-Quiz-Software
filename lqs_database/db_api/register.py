@@ -26,7 +26,7 @@ class  RegisterTemp(BaseModel):
     
 
 class RegisterResponse(BaseModel):
-    status: bool = False
+    status: str
     message: Union[str, None]
     
     class Config:
@@ -67,7 +67,7 @@ def register(register_body: RegisterTemp, db:Session = Depends(get_db)):
             db.commit()
 
             message="User created successfully"
-            return RegisterResponse(status=True, message=message)
+            return RegisterResponse(status=status.HTTP_200_OK, message=message)
     except HTTPException:
         raise
     except Exception as error:

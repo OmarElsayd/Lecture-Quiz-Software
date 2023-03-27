@@ -3,6 +3,8 @@ import { QuizData } from './quizData';
 import { StudentServicesService } from './student-services.service';
 import { AuthServiceService } from '../api_services/auth-service.service';
 import { Subscription, timer } from 'rxjs';
+import { ToastHandlerService } from '../toastHandle/toast-handler.service'
+import { ToastConfig } from '../toastHandle/toast-config';
 
 @Component({
   selector: 'app-students',
@@ -27,7 +29,10 @@ export class StudentsComponent implements OnInit {
   timerSubscription!: Subscription;
   userInfo = {user_id: localStorage.getItem('user_id')}
 
-  constructor(private studentService: StudentServicesService, private quizService: AuthServiceService) { }
+  constructor(private studentService: StudentServicesService,
+     private quizService: AuthServiceService,
+     private ToastHandlerService:ToastHandlerService
+     ) { }
 
   join_quiz() {
     console.log(this.quizCode);
@@ -39,7 +44,7 @@ export class StudentsComponent implements OnInit {
       (message) => {
         console.log(message);
         if (message.event === 'start_quiz') {
-          console.log('Quiz started');
+          this.ToastHandlerService.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, 'Quiz Started');
           this.quizStarted = true;
           this.startTimer(this.quizData.quiz_header.quiz_duration);
         }
@@ -97,7 +102,7 @@ export class StudentsComponent implements OnInit {
     console.log("Answer List:", answerList);
     this.quizService.submitQuiz(answerList, this.userInfo).subscribe(
       (data) => {
-        console.log(data);
+        this.ToastHandlerService.handleToast(data);
         this.quizCompleted = true;
         this.quizStarted = false;
         this.quizDataInfo = false;

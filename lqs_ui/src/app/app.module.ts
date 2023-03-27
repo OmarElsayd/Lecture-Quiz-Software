@@ -59,7 +59,6 @@ import { MessageService } from 'primeng/api';
     MatTableModule,
     MatSortModule,
     ToastModule,
-    MessageService
   ],
   exports: [],
   providers: [

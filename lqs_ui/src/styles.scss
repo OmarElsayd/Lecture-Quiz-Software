@@ -40,3 +40,22 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+@import '~primeng/resources/themes/saga-blue/theme.css';
+@import '~primeng/resources/primeng.min.css';
+@import '~primeicons/primeicons.css';
+
+.ui-toast-container {
+  box-sizing: border-box;
+  pointer-events: none;
+  position: fixed;
+  z-index: 10000;
+}
+
+/* Toast Position: Top Center */
+.ui-toast-container.top-center {
+  left: 50%;
+  top: 1rem;
+  transform: translateX(-50%);
+}

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthServiceService } from '../api_services/auth-service.service';
+import { ToastHandlerService } from '../toastHandle/toast-handler.service'
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,7 @@ export class RegisterComponent {
   class_code!: string;
 
   data: any;
-  constructor(private authService: AuthServiceService) {}
+  constructor(private authService: AuthServiceService, private ToastHandlerService:ToastHandlerService) {}
 
   RegisterProsses() {
     if (this.name == undefined || this.name == ''){
@@ -64,7 +65,7 @@ export class RegisterComponent {
         alert(this.data.error);
       }
       if (this.data.status){
-        alert(this.data.message);
+        this.ToastHandlerService.handleToast(this.data);
         window.location.href = '';
       }
     });

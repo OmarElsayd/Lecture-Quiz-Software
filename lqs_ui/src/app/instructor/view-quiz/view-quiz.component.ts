@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
+import { ToastConfig } from 'src/app/toastHandle/toast-config';
+import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
 
 interface Quiz {
   quiz_id: number;
@@ -29,7 +31,7 @@ export class ViewQuizComponent {
     // Your quiz data here
   ];
 
-  constructor (private lqsService: AuthServiceService) {}
+  constructor (private lqsService: AuthServiceService, private ToastHandlerService: ToastHandlerService) {}
 
   ngOnInit() {
     this.lqsService.getAllQuizzes().subscribe((data) => {
@@ -53,6 +55,7 @@ export class ViewQuizComponent {
           link.download = `quiz-report-${quiz.quiz_id}-${quiz.quiz_name}-${quiz.created_date}.csv`;
           link.click();
           window.URL.revokeObjectURL(url);
+          this.ToastHandlerService.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, "Downloading!");
         },
         (error) => {
           console.error('Failed to download quiz report', error);

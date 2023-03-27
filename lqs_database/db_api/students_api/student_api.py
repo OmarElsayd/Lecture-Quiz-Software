@@ -152,7 +152,7 @@ def submit_quiz(quiz_answer_body: List[QuizAnswers], user_info: UserInfo, sessio
                 )
             )
             session.commit()
-        return {"message": "Quiz submitted successfully"}
+        return {"message": "Quiz submitted successfully", "status": status.HTTP_200_OK}
     except HTTPException as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error: {e}")
             

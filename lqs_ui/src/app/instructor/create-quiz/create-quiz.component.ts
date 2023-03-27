@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
-import { delay } from 'rxjs';
+import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
 
 
 
@@ -74,7 +74,7 @@ export class CreateQuizComponent implements OnInit{
   };
   
 
-  constructor(private authService: AuthServiceService) {}
+  constructor(private authService: AuthServiceService, private ToastHandlerService: ToastHandlerService) {}
 
   ngOnInit() {
     this.authService.getCourses().subscribe((data: string[]) => {
@@ -182,8 +182,11 @@ export class CreateQuizComponent implements OnInit{
         localStorage.setItem("quiz_id", data.quiz_id);
   
         // Move the if statement inside the subscribe block
-        if (data.status === true) {
+        if (data.status === '200') {
+          this.ToastHandlerService.handleToast(data);
+          setTimeout(() => {
           window.location.href = '/start_quiz';
+          }, 2000);
         } else {
           alert("Something went wrong. Please try again.");
         }

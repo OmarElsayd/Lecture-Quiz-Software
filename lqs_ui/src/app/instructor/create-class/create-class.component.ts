@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
+import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
 
 @Component({
   selector: 'app-create-class',
@@ -15,12 +16,13 @@ export class CreateClassComponent {
   courseCode : string = "";
   courseName : string = "";
 
-  constructor(private apiServices: AuthServiceService) { }
+  constructor(private apiServices: AuthServiceService,private ToastHandlerService: ToastHandlerService) {}
 
   submitCreateClass() {
     this.apiServices.create_class({course_code: this.courseCode, class_name: this.courseName, instructor_id: this.instructorId}).subscribe(
       (data) => {
         console.log(data);
+        this.ToastHandlerService.handleToast(data);
       },
       (error) => console.error(error)
     );

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
+import { ToastConfig } from 'src/app/toastHandle/toast-config';
+import { ToastHandlerService } from '../../../toastHandle/toast-handler.service'
 
 @Component({
   selector: 'app-start-quiz',
@@ -16,7 +18,7 @@ export class StartQuizComponent implements OnInit {
   // quizWebSocket!: WebSocketSubject<any>;
   studentInlobby: number = 0;
 
-  constructor(private quizService: AuthServiceService) { }
+  constructor(private quizService: AuthServiceService, private ToastHandlerService: ToastHandlerService) { }
 
   ngOnInit() {
     this.course_code = localStorage.getItem("quiz_code") as string;
@@ -35,6 +37,7 @@ export class StartQuizComponent implements OnInit {
     this.quizService.start_quiz();
     this.quizService.quizWebSocket.subscribe();
     console.log("start quiz");
+    this.ToastHandlerService.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, "Starting Quiz");
   }
 
 }

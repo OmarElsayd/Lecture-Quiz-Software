@@ -72,7 +72,7 @@ def delete_user(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No student found")
         db.delete(user)
         db.commit()
-        return genResponse(status=True, message="Student deleted successfully")
+        return genResponse(status=status.HTTP_200_OK, message="Student deleted successfully")
     except HTTPException:
         raise
     except Exception as error:
@@ -109,7 +109,7 @@ def create_new_clas(
         )
         session.add(new_class)
         session.commit()
-        return genResponse(status=True, message="Class created successfully")
+        return genResponse(status=status.HTTP_200_OK, message="Class created successfully")
     except HTTPException:
         raise
     except Exception as error:
@@ -146,7 +146,7 @@ def create_ta_user(
             )
         session.add(new_ta)
         session.commit()
-        return genResponse(status=True, message="TA created successfully")
+        return genResponse(status=status.HTTP_200_OK, message="TA created successfully")
     
     except HTTPException:
         raise
@@ -224,7 +224,7 @@ def create_quiz(
                     tx.flush()
 
             return CreateQuizResponse(
-                status=True,
+                status=status.HTTP_200_OK,
                 message="Quiz created successfully",
                 quiz_id=quiz_id,
                 quiz_code=quiz_code
