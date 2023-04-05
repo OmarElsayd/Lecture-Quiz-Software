@@ -1,3 +1,3 @@
 export const environment = {};
 
-export const baseUrl = 'http://127.0.0.1:8000';
+export const baseUrl = 'http://172.24.71.139:8000';

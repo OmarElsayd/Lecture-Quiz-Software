@@ -59,7 +59,10 @@ def register(register_body: RegisterTemp, db:Session = Depends(get_db)):
                 password=password,
                 role=Role.STUDENT
                 )
-            students_list = db.query(Class).filter(Class.course_code == register_body.course_code).first().student_list
+            class_ = db.query(Class).filter(Class.course_code == register_body.course_code).first()
+            if not class_:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Class does not exist")
+            students_list = class_.student_list
             students_list.update({register_body.name : register_body.email})
             db.query(Class).filter(Class.course_code == register_body.course_code).update({"student_list":students_list})
             

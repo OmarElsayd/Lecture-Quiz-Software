@@ -34,6 +34,12 @@ export class InstructorComponent {
   admin_console(){
     window.location.href = '/admin_console';
   }
+  edit_quiz(){
+    window.location.href = '/edit_quiz';
+  }
+  start_quiz(){
+    window.location.href = '/get_start_quiz'
+  }
 }
 
 

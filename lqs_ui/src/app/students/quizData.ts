@@ -1,5 +1,6 @@
 export interface QuizData {
     quiz_header: {
+        quiz_id: string
         number_of_questions: number;
         quiz_duration: number;
         class_code: string;

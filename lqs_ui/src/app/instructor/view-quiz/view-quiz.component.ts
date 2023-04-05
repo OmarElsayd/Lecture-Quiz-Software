@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
 import { ToastConfig } from 'src/app/toastHandle/toast-config';
 import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
-
+import {InstructorService} from '../instructor.service'
 interface Quiz {
   quiz_id: number;
   quiz_name: string;
@@ -18,20 +18,22 @@ interface Quiz {
   templateUrl: './view-quiz.component.html',
   styleUrls: ['./view-quiz.component.scss']
 })
-export class ViewQuizComponent {
+export class ViewQuizComponent implements OnInit, OnChanges{
   title = 'lqs_ui';
   date = new Date().toLocaleDateString();
   time = new Date().toLocaleTimeString();
   version = '1.0.0';
-  displayedColumns: string[] = ['quiz_id', 'quiz_name', 'number_of_questions', 'quiz_duration', 'lecture_id', 'created_date', 'actions'];
+  displayedColumns: string[] = ['quiz_id', 'quiz_name', 'quiz_title', 'number_of_questions', 'quiz_duration', 'created_date', 'actions'];
   dataSource!: MatTableDataSource<Quiz>;
   isQuizData: boolean = false;
 
-  quizzes: Quiz[] = [
-    // Your quiz data here
-  ];
+  quizzes: Quiz[] = [];
 
-  constructor (private lqsService: AuthServiceService, private ToastHandlerService: ToastHandlerService) {}
+  constructor (
+    private lqsService: AuthServiceService,
+    private ToastHandlerService: ToastHandlerService,
+    private InstructorService:InstructorService
+    ) {}
 
   ngOnInit() {
     this.lqsService.getAllQuizzes().subscribe((data) => {
@@ -42,6 +44,9 @@ export class ViewQuizComponent {
         this.dataSource = new MatTableDataSource(this.quizzes); // Move this line here
       }
     });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+      
   }
 
   downloadQuiz(quiz: Quiz) {
@@ -58,6 +63,7 @@ export class ViewQuizComponent {
           this.ToastHandlerService.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, "Downloading!");
         },
         (error) => {
+          this.ToastHandlerService.handleToast(error);
           console.error('Failed to download quiz report', error);
         }
       );
@@ -66,11 +72,14 @@ export class ViewQuizComponent {
   
 
   deleteQuiz(quiz: Quiz) {
-    // Delete quiz implementation
+    this.InstructorService.deleteQuiz(quiz.quiz_id).subscribe((data)=>{
+      this.ToastHandlerService.handleToast(data);
+      this.ngOnInit();
+    },
+    (error)=> {
+      this.ToastHandlerService.handleToast(error);
+    })
   }
 
-  editQuiz(quiz: Quiz) {
-    // Edit quiz implementation
-  }
 }
 

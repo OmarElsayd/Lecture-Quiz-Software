@@ -9,7 +9,7 @@ from typing import List
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, QuizData, Students, TaTemplete, WebSocketManager, genResponse, ClassInput
-from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses, Users, Role
+from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses, Scores, Users, Role
 from fastapi import APIRouter
 
 
@@ -80,6 +80,48 @@ def delete_user(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
 
       
+@router.delete(
+    "delete_quiz",
+    response_model=genResponse
+    )
+def delete_quiz(quiz_id: str, session: Session = Depends(get_db)):
+    try:
+        quiz = session.query(Quizzes).filter(Quizzes.id == int(quiz_id)).first()
+        if not quiz:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Quiz not found")
+        
+        question_answers = session.query(QuestionAnswers).join(Questions, Questions.id == QuestionAnswers.question_id).filter(Questions.quiz_id == int(quiz_id)).all()
+        for qa in question_answers:
+            session.delete(qa)
+            
+        responses = session.query(Responses).filter(Responses.quiz_id == int(quiz_id)).all()
+        if responses:
+            for response in responses:
+                session.delete(response)
+
+        questions = session.query(Questions).filter(Questions.quiz_id == int(quiz_id)).all()
+        for question in questions:
+            session.delete(question)
+
+            
+        scores = session.query(Scores).filter(Scores.quiz_id==int(quiz_id)).all()
+        if scores:
+            for score in scores:
+                session.delete(score)
+
+        session.delete(quiz)
+        session.commit()
+        
+        return genResponse(
+            status=status.HTTP_200_OK,
+            message="Quiz has been deleted"
+        )
+
+    except HTTPException as error:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{error}")
+
+        
+        
       
 @router.post(
     "/NewClass",
@@ -282,15 +324,16 @@ def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
         logger.info(quiz_id)
         quiz_results = session.query(
             Users.name.label("Student Name"),
-            Quizzes.id.label("quiz id"),
-            Quizzes.quiz_name.label("Quiz Name"),
+            Responses.user_id.label('User Id'),
+            Quizzes.id.label("Quiz id"),
+            Quizzes.quiz_name.label("Quiz Code"),
+            Lectures.lecture_name.label("Quiz Title"),
             Quizzes.quiz_duration,
             Questions.id.label("question_id"),
+            Questions.question.label("Question"),
             Questions.question_type,
             Questions.correct_answer,
-            Responses.id.label("response_id"),
-            Responses.user_id,
-            Responses.iscorrect,
+            Responses.iscorrect.label("Is correct?"),
             Responses.answer,
         ).join(
             Questions, Questions.quiz_id == Quizzes.id
@@ -298,6 +341,8 @@ def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
             Responses, Responses.question_id == Questions.id
         ).join(
             Users, Users.id == Responses.user_id
+        ).join(
+            Lectures, Lectures.id == Quizzes.lecture_id
         ).filter(
             Quizzes.id == int(quiz_id)
         ).all()
@@ -329,7 +374,17 @@ def get_all_quizes(session: Session = Depends(get_db)):
         session (Session, optional): _description_. Defaults to Depends(get_db).
     """
     try:
-        all_quzzies = session.query(Quizzes).all()
+        all_quzzies = session.query(
+            Quizzes.id,
+            Lectures.lecture_name,
+            Quizzes.quiz_name,
+            Quizzes.number_of_questions,
+            Quizzes.quiz_duration,
+            Quizzes.lecture_id,
+            Quizzes.created,
+            ).join(
+            Lectures, Quizzes.lecture_id == Lectures.id
+        ).all()
         
         if not all_quzzies:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No Quizzes Found")
@@ -340,6 +395,7 @@ def get_all_quizes(session: Session = Depends(get_db)):
             quiz_list.append(QuizData(
                 quiz_id=quiz.id,
                 quiz_name=quiz.quiz_name,
+                quiz_title=quiz.lecture_name,
                 number_of_questions=quiz.number_of_questions,
                 quiz_duration=quiz.quiz_duration,
                 lecture_id=quiz.lecture_id,
@@ -350,3 +406,29 @@ def get_all_quizes(session: Session = Depends(get_db)):
         return quiz_list
     except HTTPException as error:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal server error: {error}")
+    
+    
+@router.get(
+    "/get_quiz_id",
+    status_code=status.HTTP_200_OK
+)
+def get_quiz_id(
+    quiz_code: str,
+    session: Session = Depends(get_db)
+):
+    """_summary_
+
+    Args:
+        quiz_code (str, optional): _description_. Defaults to Depends().
+        seession (Session, optional): _description_. Defaults to Depends(get_db).
+    """
+    try:
+        quiz = session.query(Quizzes).filter(Quizzes.quiz_name==quiz_code).first()
+        
+    except Exception as error:
+        logger.error(error)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'Internal server error: {error}')
+    
+    if not quiz:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Quiz Not Found!")
+    return quiz

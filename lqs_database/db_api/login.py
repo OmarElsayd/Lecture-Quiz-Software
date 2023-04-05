@@ -26,7 +26,7 @@ class LoginTemp(BaseModel):
 
 
 class LoginResponse(BaseModel):
-    user_id: int
+    user_id: Union[int, None]
     status: str
     is_instructor: bool = False
     role: Union[Enum, None] = None
@@ -58,7 +58,7 @@ def login(login_body: LoginTemp, db: Session = Depends(get_db)):
                     .filter(Users.password == password)
                     .first())
         if not response:
-            login_response = LoginResponse(message="Incorrect email or password")
+            login_response = LoginResponse(status=status.HTTP_404_NOT_FOUND ,message="Incorrect email or password")
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(login_response.message))
         
         if response.role.value in (

@@ -63,8 +63,7 @@
 
 .table-container {
   padding: 2rem;
-  max-width: 1700px;  
-  min-width: 1500px;
+  max-width: 1400px;
   margin: 120px auto 0;
   margin-bottom: 25px;
 }
@@ -75,10 +74,10 @@
   margin-bottom: 1rem;
 }
 
-.mat-header-cell,
-.mat-cell {
+.mat-header-cell, .mat-cell {
   text-align: left;
   border-bottom: 1px solid #ccc;
+  width: 150px;
 }
 
 .mat-header-cell {
@@ -95,4 +94,20 @@ button {
   white-space: normal;
   margin-bottom: 35px;
   border-radius: 5px;
+}
+
+$custom-green: #4CAF50; // replace with your desired green color
+
+button.custom-green {
+  background-color: $custom-green;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+
+button.custom-green:hover {
+  background-color: darken($custom-green, 10%);
 }

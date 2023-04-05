@@ -16,6 +16,11 @@
       <mat-header-cell *matHeaderCellDef> Quiz ID </mat-header-cell>
       <mat-cell *matCellDef="let quiz"> {{quiz.quiz_id}} </mat-cell>
     </ng-container>
+
+    <ng-container matColumnDef="quiz_title">
+      <mat-header-cell *matHeaderCellDef> Quiz Title </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.quiz_title}} </mat-cell>
+    </ng-container>
   
     <ng-container matColumnDef="quiz_name">
       <mat-header-cell *matHeaderCellDef> Quiz Code </mat-header-cell>
@@ -32,11 +37,6 @@
       <mat-cell *matCellDef="let quiz"> {{quiz.quiz_duration}} Min </mat-cell>
     </ng-container>
   
-    <ng-container matColumnDef="lecture_id">
-      <mat-header-cell *matHeaderCellDef> Lecture ID </mat-header-cell>
-      <mat-cell *matCellDef="let quiz"> {{quiz.lecture_id}} </mat-cell>
-    </ng-container>
-  
     <ng-container matColumnDef="created_date">
       <mat-header-cell *matHeaderCellDef> Created Date </mat-header-cell>
       <mat-cell *matCellDef="let quiz"> {{quiz.created_date}} </mat-cell>
@@ -47,7 +47,6 @@
       <mat-cell *matCellDef="let quiz">
         <button mat-raised-button color="primary" (click)="downloadQuiz(quiz)">Download</button>
         <button mat-raised-button color="warn" (click)="deleteQuiz(quiz)">Delete</button>
-        <button mat-raised-button color="accent" (click)="editQuiz(quiz)">Edit</button>
       </mat-cell>
     </ng-container>
   

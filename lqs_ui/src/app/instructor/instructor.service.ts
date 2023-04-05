@@ -27,7 +27,15 @@ export class InstructorService {
   deleteStudent(student: any): Observable<any> {
     console.log(student);
     return this.http.delete(`${baseUrl}/instructor/deleteUser`, { body: student }).pipe(
+        map(data => data),
         catchError(this.handleError)
     );
-}
+
+  }
+  deleteQuiz(quiz_id: any): Observable<any> {
+    return this.http.delete(`${baseUrl}/instructordelete_quiz?quiz_id=${quiz_id}`).pipe(
+      map(data => data),
+      catchError(this.handleError)
+  );
+  } 
 }

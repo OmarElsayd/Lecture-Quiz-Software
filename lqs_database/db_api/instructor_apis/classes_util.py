@@ -71,6 +71,7 @@ class CreateQuestionInput(BaseModel):
 class QuizData(BaseModel):
     quiz_id: int
     quiz_name: str
+    quiz_title: str
     number_of_questions: int
     quiz_duration: int
     lecture_id: int

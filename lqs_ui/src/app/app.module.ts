@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
@@ -26,7 +26,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { ViewQuizComponent } from './instructor/view-quiz/view-quiz.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-
+import { EditQuizComponent } from './instructor/edit-quiz/edit-quiz.component';
+import { GetStartQuizComponent } from './instructor/get-start-quiz/get-start-quiz.component';
+import { AdminConsoleComponent } from './instructor/admin-console/admin-console.component';
 
 
 @NgModule({
@@ -41,7 +43,11 @@ import { MessageService } from 'primeng/api';
     OrderByPipe,
     ViewStudentsComponent,
     CreateClassComponent,
-    ViewQuizComponent
+    ViewQuizComponent,
+    EditQuizComponent,
+    GetStartQuizComponent,
+    AdminConsoleComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -59,6 +65,7 @@ import { MessageService } from 'primeng/api';
     MatTableModule,
     MatSortModule,
     ToastModule,
+    ReactiveFormsModule,
   ],
   exports: [],
   providers: [

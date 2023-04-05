@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { delay } from 'rxjs';
 import { AuthServiceService } from '../api_services/auth-service.service';
-import { ToastHandlerService } from '../toastHandle/toast-handler.service'
+import { ToastHandlerService } from '../toastHandle/toast-handler.service';
 
 
 @Component({

@@ -7,6 +7,7 @@ class Choice(BaseModel):
     isCorrect: bool
     
 class QuizHeader(BaseModel):
+    quiz_id: str
     number_of_questions: int
     quiz_duration: int
     class_code: str

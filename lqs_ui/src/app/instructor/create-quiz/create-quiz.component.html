@@ -18,7 +18,7 @@
             <option value="" disabled [selected]="true">Select a Course</option>
             <option *ngFor="let course of courseNames" [ngValue]="course">{{ course }}</option>
         </select>
-        <input type="text" [(ngModel)]="lectureName" name="lectureName" placeholder="Lecture Name" />
+        <input type="text" [(ngModel)]="lectureName" name="lectureName" placeholder="Quiz Title" />
         <input type="number" min="5" [(ngModel)]="quizDuration" name="quizDuration" placeholder="Quiz Duration in Min" />
     </div>
     <div class="example-container">

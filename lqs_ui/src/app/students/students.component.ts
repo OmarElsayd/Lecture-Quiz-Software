@@ -64,6 +64,11 @@ export class StudentsComponent implements OnInit {
           this.errorMessage = 'No questions found';
         }
         if (data) {
+          let quizId = localStorage.getItem('quiz_id');
+          if (quizId){
+            localStorage.removeItem('quiz_id');
+          }
+          localStorage.setItem('quiz_id', data.quiz_header.quiz_id);
           this.isHideQuizCodePart = true;
           this.quizService.addStudentToLobby();
           this.quizService.lobbyWebSocket.subscribe();

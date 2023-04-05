@@ -15,13 +15,13 @@
   <div class="create-class-form">
     <form (ngSubmit)="submitCreateClass()">
       <mat-form-field appearance="outline">
-        <mat-label>Course Code</mat-label>
-        <input matInput [(ngModel)]="courseCode" name="courseCode" required />
-      </mat-form-field>
-  
-      <mat-form-field appearance="outline">
         <mat-label>Course Name</mat-label>
         <input matInput [(ngModel)]="courseName" name="courseName" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Course Code</mat-label>
+        <input matInput [(ngModel)]="courseCode" name="courseCode" required />
       </mat-form-field>
   
       <button mat-raised-button color="primary" type="submit">Create Class</button>

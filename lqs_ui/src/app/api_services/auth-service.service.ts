@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, Subject, throwError } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { baseUrl } from 'src/environments/environment';
+import { ToastHandlerService } from '../toastHandle/toast-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,9 @@ export class AuthServiceService {
   quizWebSocket!: WebSocketSubject<any>;
   lobbyWebSocket!: WebSocketSubject<any>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private ToastService: ToastHandlerService) {
     this.connectToQuizWebSocket();
-   }
+  }
 
   login(data: any):Observable<any>{
     return this.http.post(`${baseUrl}/login`, data)
@@ -55,8 +56,7 @@ export class AuthServiceService {
   }
 
 
-  private handleError(error: HttpErrorResponse) {
-    alert(error.error.detail);
+  handleError(error: HttpErrorResponse) {
     return throwError(
       'Something bad happened; please try again later.');
   };
@@ -70,6 +70,12 @@ export class AuthServiceService {
   start_quiz() {
     this.quizWebSocket.next('start');
     console.log(this.quizWebSocket);
+  }
+
+  get_quiz_id(quiz_code: any): Observable<any>{
+     return this.http.get(`${baseUrl}/instructor/get_quiz_id?quiz_code=${quiz_code}`).pipe(
+       map(data=>data)
+     );
   }
 
   addStudentToLobby() {

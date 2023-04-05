@@ -44,6 +44,7 @@ def get_quiz(
         send_quiz = Quiz(
             questions=[],
             quiz_header=QuizHeader(
+                quiz_id=quiz.id,
                 quiz_duration=quiz.quiz_duration,
                 number_of_questions=quiz.number_of_questions,
                 class_code=quiz.quiz_name, 
