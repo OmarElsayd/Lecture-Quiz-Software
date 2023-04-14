@@ -46,7 +46,7 @@
       <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
       <mat-cell *matCellDef="let quiz">
         <button mat-raised-button color="primary" (click)="downloadQuiz(quiz)">Download</button>
-        <button mat-raised-button color="warn" (click)="deleteQuiz(quiz)">Delete</button>
+        <button mat-raised-button color="warn" (click)="openConfirmationDialog(quiz)">Delete</button>
       </mat-cell>
     </ng-container>
   

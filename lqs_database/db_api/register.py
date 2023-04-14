@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db_models.models import Users, Role, Class
 from db_api.local_session import get_db
-from db_api.api_util import get_hashed_password
+from db_api.api_util import get_hashed_password, validate_email
 
 
 logging.basicConfig(level=logging.INFO)
@@ -46,12 +46,19 @@ def register(register_body: RegisterTemp, db:Session = Depends(get_db)):
         db (Session, optional): _description_. Defaults to Depends(get_db).
     """
     
+    if not validate_email(register_body.email):
+        raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Invalid email! Use school email"
+        )
+    
     try:
         password = get_hashed_password(register_body.password)
         responce = (db.query(Users).filter(Users.email == register_body.email).first())
         if responce:
             message="User already exists"
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=message)
+        
         if not responce:
             new_user = Users(
                 name=register_body.name,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { QuizData } from './quizData';
 import { StudentServicesService } from './student-services.service';
 import { AuthServiceService } from '../api_services/auth-service.service';
@@ -11,7 +11,7 @@ import { ToastConfig } from '../toastHandle/toast-config';
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.scss']
 })
-export class StudentsComponent implements OnInit {
+export class StudentsComponent implements OnInit, OnDestroy{
   title = 'lqs_ui';
   date = new Date().toLocaleDateString();
   time = new Date().toLocaleTimeString();
@@ -39,6 +39,7 @@ export class StudentsComponent implements OnInit {
   }
 
   ngOnInit() {
+    window.addEventListener('beforeunload', this.confirmOnPageExit);
     console.log('Student component loaded');
     this.quizService.quizWebSocket.subscribe(
       (message) => {
@@ -51,6 +52,10 @@ export class StudentsComponent implements OnInit {
       },
       (error) => console.error(error)
     );
+  }
+
+  ngOnDestroy(): void {
+    window.addEventListener('beforeunload', this.confirmOnPageExit);
   }
   
 
@@ -111,6 +116,9 @@ export class StudentsComponent implements OnInit {
         this.quizCompleted = true;
         this.quizStarted = false;
         this.quizDataInfo = false;
+      },
+      (error)=>{
+        this.ToastHandlerService.handleToast(error);
       }
     );
   }
@@ -130,5 +138,10 @@ export class StudentsComponent implements OnInit {
         this.submitQuiz(null);
       }
     });
+  }
+
+  confirmOnPageExit(event: BeforeUnloadEvent) {
+    event.preventDefault();
+    event.returnValue = 'Are you sure you want to reload the page? You might lose your work.';
   }
 }

@@ -15,7 +15,7 @@ export class ToastHandlerService {
       this.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, data.message);
     }
     if (data.status == 400){
-      this.showToast(ToastConfig.S400.severity, ToastConfig.S400.summary, data.error);
+      this.showToast(ToastConfig.S400.severity, ToastConfig.S400.summary, data.error.detail);
     }
     if (data.status == 404){
       this.showToast(ToastConfig.S404.severity, ToastConfig.S404.summary, ToastConfig.S404.detail);

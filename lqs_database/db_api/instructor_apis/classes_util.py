@@ -8,6 +8,7 @@ from typing import Union
 class Students(BaseModel):
     name: Union[str, None]
     email: Union[str, None]
+    role: Union[str, None]
     
     class Config:
         orm_mode = True
@@ -76,6 +77,12 @@ class QuizData(BaseModel):
     quiz_duration: int
     lecture_id: int
     created_date: str
+    
+class UserInfo(BaseModel):
+    name: str
+    email: str
+    password: str
+    role: str
         
         
 class WebSocketManager:

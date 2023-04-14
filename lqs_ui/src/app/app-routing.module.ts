@@ -4,7 +4,6 @@ import { AdminConsoleComponent } from './instructor/admin-console/admin-console.
 import { CreateClassComponent } from './instructor/create-class/create-class.component';
 import { CreateQuizComponent } from './instructor/create-quiz/create-quiz.component';
 import { StartQuizComponent } from './instructor/create-quiz/start-quiz/start-quiz.component';
-import { EditQuizComponent } from './instructor/edit-quiz/edit-quiz.component';
 import { GetStartQuizComponent } from './instructor/get-start-quiz/get-start-quiz.component';
 import { InstructorComponent } from './instructor/instructor.component';
 import { ViewQuizComponent } from './instructor/view-quiz/view-quiz.component';
@@ -23,7 +22,6 @@ const routes: Routes = [
   { path: 'view_students', component: ViewStudentsComponent},
   { path: 'create_class', component: CreateClassComponent},
   { path: 'view_quizzies', component: ViewQuizComponent},
-  { path: 'edit_quiz', component: EditQuizComponent},
   { path: 'get_start_quiz', component: GetStartQuizComponent},
   { path: 'admin_console', component: AdminConsoleComponent}
 ];

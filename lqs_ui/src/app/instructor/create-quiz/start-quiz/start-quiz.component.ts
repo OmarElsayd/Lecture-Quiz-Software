@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
 import { ToastConfig } from 'src/app/toastHandle/toast-config';
@@ -17,6 +17,9 @@ export class StartQuizComponent implements OnInit {
   course_code! : string;
   // quizWebSocket!: WebSocketSubject<any>;
   studentInlobby: number = 0;
+  audioSrc: string | ArrayBuffer | null = null;
+
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef;
 
   constructor(private quizService: AuthServiceService, private ToastHandlerService: ToastHandlerService) { }
 
@@ -38,6 +41,23 @@ export class StartQuizComponent implements OnInit {
     this.quizService.quizWebSocket.subscribe();
     console.log("start quiz");
     this.ToastHandlerService.showToast(ToastConfig.S200.severity, ToastConfig.S200.summary, "Starting Quiz");
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.audioSrc = reader.result;
+          setTimeout(() => {
+            this.audioPlayer.nativeElement.load();
+          }, 0);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
   }
 
 }

@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
 import { ToastConfig } from 'src/app/toastHandle/toast-config';
+import { ConfirmationDialogComponent } from 'src/app/confirmation-dialog-component/confirmation-dialog-component.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface Student {
   email: string;
@@ -21,11 +23,11 @@ export class ViewStudentsComponent implements OnInit {
   time = new Date().toLocaleTimeString();
   version = '1.0.0';
   students: Student[] = [];
-  displayedColumns: string[] = ['name', 'email', 'delete'];
+  displayedColumns: string[] = ['name', 'email', 'role','delete'];
   dataSource = new MatTableDataSource<any>();
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private Service: InstructorService, private ToastHandlerService: ToastHandlerService) {}
+  constructor(private Service: InstructorService, private ToastHandlerService: ToastHandlerService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getStudents();
@@ -40,6 +42,20 @@ export class ViewStudentsComponent implements OnInit {
     if (this.students){
       console.log(this.students);
     }
+  }
+
+  openConfirmationDialog(student: any): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: 'Are you sure you want to delete this user?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteStudent(student);
+      }
+    });
   }
 
   deleteStudent(student: any) {

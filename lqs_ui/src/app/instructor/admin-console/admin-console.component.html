@@ -11,12 +11,15 @@
 </div>
 
 
-
+<div class="contaner">
 <mat-checkbox [(ngModel)]="isStudentForm">Create Student Account</mat-checkbox>
 <mat-checkbox [(ngModel)]="isTAForm">Create TA Account</mat-checkbox>
 
 <ng-container *ngIf="isStudentForm">
   <form [formGroup]="studentForm" (ngSubmit)="onStudentSubmit()">
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="name">
+    </mat-form-field>
     <mat-form-field>
       <input matInput placeholder="Email" formControlName="email">
     </mat-form-field>
@@ -30,6 +33,9 @@
 <ng-container *ngIf="isTAForm">
   <form [formGroup]="taForm" (ngSubmit)="onTaSubmit()">
     <mat-form-field>
+      <input matInput placeholder="Name" formControlName="Name">
+    </mat-form-field>
+    <mat-form-field>
       <input matInput placeholder="Email" formControlName="email">
     </mat-form-field>
     <mat-form-field>
@@ -38,7 +44,7 @@
     <button mat-raised-button color="accent" type="submit">Create TA Account</button>
   </form>
 </ng-container>
-  
+</div>
 
 
 <div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">

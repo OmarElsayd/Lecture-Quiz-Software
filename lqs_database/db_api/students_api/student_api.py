@@ -4,7 +4,6 @@ from db_api.instructor_apis.classes_util import WebSocketManager
 from db_api.local_session import get_db
 from fastapi import Depends, HTTPException, WebSocket, WebSocketDisconnect, status
 from typing import List
-from sqlalchemy import delete
 from .class_util import QuestionsResponces, QuizAnswers, QuizHeader, Quiz, UserInfo
 from sqlalchemy.orm import Session
 from db_models.models import Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses

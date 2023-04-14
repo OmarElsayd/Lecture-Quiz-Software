@@ -1,14 +1,14 @@
-from datetime import datetime
 import json
 import logging
+from db_api.register import RegisterResponse
 import pandas as pd
 from db_api.api_util import create_quiz_code, get_hashed_password, validate_email
 from db_api.local_session import get_db, transaction
 from fastapi import Depends, HTTPException, Response, WebSocket, WebSocketDisconnect, status
 from typing import List
-from sqlalchemy import delete
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
-from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, QuizData, Students, TaTemplete, WebSocketManager, genResponse, ClassInput
+from .classes_util import CreateQuestionInput, CreateQuizInput, CreateQuizResponse, QuizData, Students, TaTemplete, UserInfo, WebSocketManager, genResponse, ClassInput
 from db_models.models import Class, Lectures, QuestionAnswers, QuestionType, Questions, Quizzes, Responses, Scores, Users, Role
 from fastapi import APIRouter
 
@@ -38,23 +38,25 @@ def get_all_students(session: Session = Depends(get_db)):
         session (Session, optional): Database session. Defaults to Depends(get_db).
     """
     try:
-        students = session.query(Users).filter(
-            Users.role == Role.STUDENT.value
-            ).all()
+        students = session.query(Users).filter(or_(
+            Users.role == Role.STUDENT.value,
+            Users.role == Role.TA.value
+        )).all()
         if not students:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No students found")
         students_list = []
         for student in students:
             students_list.append(Students(
                 name=student.name,
-                email=student.email
+                email=student.email,
+                role=str(student.role.value)
             ))
         return students_list
     except HTTPException:
         raise
     except Exception as e:
         logger.error(e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error {e}")
 
     
 
@@ -159,43 +161,6 @@ def create_new_clas(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error{error}")
             
 
-@router.put(
-    "/create_ta",
-    status_code=status.HTTP_200_OK,
-    response_model=genResponse
-)
-def create_ta_user(
-    input_body: TaTemplete,
-    session: Session = Depends(get_db)
-):
-    if not input_body.name or not input_body.email or not input_body.password:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Name, email and password are required"
-            )
-    if not validate_email(input_body.email):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid email! Use school email"
-            )
-    password = get_hashed_password(input_body.password)
-    try:
-        new_ta = Users(
-            name=input_body.name,
-            email=input_body.email,
-            password=password,
-            role=Role.TA.value
-            )
-        session.add(new_ta)
-        session.commit()
-        return genResponse(status=status.HTTP_200_OK, message="TA created successfully")
-    
-    except HTTPException:
-        raise
-    except Exception as error:
-        logger.error(error)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error {error}")
-    
     
 @router.put("/create_quiz", status_code=status.HTTP_200_OK, response_model=CreateQuizResponse)
 def create_quiz(
@@ -331,7 +296,7 @@ def donwload_quiz_resultes(quiz_id: str, session: Session = Depends(get_db)):
             Quizzes.quiz_duration,
             Questions.id.label("question_id"),
             Questions.question.label("Question"),
-            Questions.question_type,
+            Questions.question_type.value,
             Questions.correct_answer,
             Responses.iscorrect.label("Is correct?"),
             Responses.answer,
@@ -432,3 +397,46 @@ def get_quiz_id(
     if not quiz:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Quiz Not Found!")
     return quiz
+
+
+@router.put(
+    "/add_new_user",
+    status_code=status.HTTP_200_OK,
+    response_model=RegisterResponse
+)
+def add_new_user(user_info: UserInfo, session: Session = Depends(get_db)):
+    """_summary_
+
+    Args:
+        user_info (UserInfo): _description_
+        session (Session, optional): _description_. Defaults to Depends(get_db).
+    """
+    user_role = Role.TA.value if user_info.role == "TA" else Role.STUDENT.value
+    password = get_hashed_password(user_info.password)
+    if not validate_email(user_info.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid email! Use school email"
+            )
+    
+    try:
+        responce = (session.query(Users).filter(Users.email == user_info.email).first())
+        if responce:
+            message="User already exists"
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=message)
+        if not responce:
+            new_user = Users(
+                name=user_info.name,
+                email=user_info.email,
+                password=password,
+                role=user_role
+                )
+            session.add(new_user)
+            session.commit()
+
+            message="User created successfully"
+            return RegisterResponse(status=status.HTTP_200_OK, message=message)
+    except HTTPException:
+        raise
+    except Exception as error:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=error)

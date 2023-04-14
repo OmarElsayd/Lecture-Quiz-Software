@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
 import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
+import { MatDialog } from '@angular/material/dialog';
+
 
 
 
@@ -43,7 +45,7 @@ interface QuizData {
   templateUrl: './create-quiz.component.html',
   styleUrls: ['./create-quiz.component.scss']
 })
-export class CreateQuizComponent implements OnInit{
+export class CreateQuizComponent implements OnInit, OnDestroy{
   title = 'lqs_ui';
   date = new Date().toLocaleDateString();
   time = new Date().toLocaleTimeString();
@@ -74,12 +76,17 @@ export class CreateQuizComponent implements OnInit{
   };
   
 
-  constructor(private authService: AuthServiceService, private ToastHandlerService: ToastHandlerService) {}
+  constructor(private authService: AuthServiceService, private ToastHandlerService: ToastHandlerService, public dialog: MatDialog) {}
 
   ngOnInit() {
+    window.addEventListener('beforeunload', this.confirmOnPageExit);
     this.authService.getCourses().subscribe((data: string[]) => {
       this.courseNames = data;
     });
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('beforeunload', this.confirmOnPageExit);
   }
 
   onAnswerBooleanChange() {
@@ -198,4 +205,9 @@ export class CreateQuizComponent implements OnInit{
     );
   }
 
-}  
+  confirmOnPageExit(event: BeforeUnloadEvent) {
+    event.preventDefault();
+    event.returnValue = 'Are you sure you want to reload the page? You might lose your work.';
+  }
+}
+  

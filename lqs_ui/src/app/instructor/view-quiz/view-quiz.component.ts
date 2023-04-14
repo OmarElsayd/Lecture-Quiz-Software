@@ -1,9 +1,12 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AuthServiceService } from 'src/app/api_services/auth-service.service';
 import { ToastConfig } from 'src/app/toastHandle/toast-config';
 import { ToastHandlerService } from '../../toastHandle/toast-handler.service'
-import {InstructorService} from '../instructor.service'
+import { InstructorService } from '../instructor.service';
+import { ConfirmationDialogComponent } from '../../confirmation-dialog-component/confirmation-dialog-component.component'
+
 interface Quiz {
   quiz_id: number;
   quiz_name: string;
@@ -32,7 +35,8 @@ export class ViewQuizComponent implements OnInit, OnChanges{
   constructor (
     private lqsService: AuthServiceService,
     private ToastHandlerService: ToastHandlerService,
-    private InstructorService:InstructorService
+    private InstructorService:InstructorService,
+    private dialog: MatDialog
     ) {}
 
   ngOnInit() {
@@ -69,6 +73,21 @@ export class ViewQuizComponent implements OnInit, OnChanges{
       );
     }
   }
+
+  openConfirmationDialog(quiz: Quiz): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: 'Are you sure you want to delete this quiz?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteQuiz(quiz);
+      }
+    });
+  }
+
   
 
   deleteQuiz(quiz: Quiz) {

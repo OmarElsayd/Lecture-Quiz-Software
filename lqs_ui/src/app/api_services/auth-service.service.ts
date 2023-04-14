@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, Subject, throwError } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/webSocket';
-import { baseUrl } from 'src/environments/environment';
+import { baseUrl, wsBaseUrl } from 'src/environments/environment';
 import { ToastHandlerService } from '../toastHandle/toast-handler.service';
 
 @Injectable({
@@ -63,8 +63,8 @@ export class AuthServiceService {
 
   
   connectToQuizWebSocket() {
-    this.quizWebSocket = new WebSocketSubject('ws://127.0.0.1:8000/instructor/start_quiz_ws');
-    this.lobbyWebSocket = new WebSocketSubject('ws://127.0.0.1:8000/students/lobby_wait_ws');
+    this.quizWebSocket = new WebSocketSubject(`ws://${wsBaseUrl}/instructor/start_quiz_ws`);
+    this.lobbyWebSocket = new WebSocketSubject(`ws://${wsBaseUrl}/students/lobby_wait_ws`);
   }
 
   start_quiz() {

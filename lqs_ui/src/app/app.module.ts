@@ -26,9 +26,14 @@ import { MatSortModule } from '@angular/material/sort';
 import { ViewQuizComponent } from './instructor/view-quiz/view-quiz.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { EditQuizComponent } from './instructor/edit-quiz/edit-quiz.component';
 import { GetStartQuizComponent } from './instructor/get-start-quiz/get-start-quiz.component';
 import { AdminConsoleComponent } from './instructor/admin-console/admin-console.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ConfirmationDialogComponent } from './confirmation-dialog-component/confirmation-dialog-component.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MusicPlayerComponent } from './music-player/music-player.component';
+
+
 
 
 @NgModule({
@@ -44,9 +49,10 @@ import { AdminConsoleComponent } from './instructor/admin-console/admin-console.
     ViewStudentsComponent,
     CreateClassComponent,
     ViewQuizComponent,
-    EditQuizComponent,
     GetStartQuizComponent,
     AdminConsoleComponent,
+    ConfirmationDialogComponent,
+    MusicPlayerComponent,
     
   ],
   imports: [
@@ -66,8 +72,13 @@ import { AdminConsoleComponent } from './instructor/admin-console/admin-console.
     MatSortModule,
     ToastModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
+    MatDialogModule
   ],
   exports: [],
+  entryComponents: [
+    ConfirmationDialogComponent
+  ],
   providers: [
     MessageService
   ],
