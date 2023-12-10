@@ -1,0 +1,74 @@
+.toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #E1E0DD;
+    color: black;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 15px;
+  }
+
+  .admindash {
+    margin-left: auto;
+    margin-right: 16px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+
+  .bottom-toolbar {
+    position: fixed;
+    color: black;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #E1E0DD;
+  }
+
+  .version {
+    margin-left: 16px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: bold;
+  }
+
+  .version-time {
+    margin-right: 16px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: bold;
+  }
+
+  .students-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 120px auto 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+
+  th {
+    font-weight: bold;
+    background-color: #f2f2f2;
+  }

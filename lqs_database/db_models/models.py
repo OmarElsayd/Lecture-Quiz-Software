@@ -1,18 +1,23 @@
+#Author: Omar Elsayd
 from datetime import datetime
 from enum import Enum
 from sqlalchemy.dialects.postgresql.base import ENUM
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, CheckConstraint, Constraint, and_
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, and_
 from sqlalchemy.orm import relationship
-from lqs_database.db_models.base import Base
+from db_models.base import Base
 
 
 class Role(Enum):
-    Instructor = "Instructor"
-    Student = "Student"
+    INSTRUCTOR = "INSTRUCTOR"
+    STUDENT = "STUDENT"
+    TA = "TA"
 
 
-class QuizType(Enum):
+class QuestionType(Enum):
     MultipleChoice = "Multiple Choice"
+    TrueFalse = "True or False"
+    ShortAnswer = "Short Answer"
 
 
 class Users(Base):
@@ -21,21 +26,36 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     email = Column(String(50))
-    password = Column(String(50))
-    role = Column(ENUM(Role))
+    password = Column(String)
+    role = Column(ENUM(Role, name="role"))
     created = Column(DateTime, default=datetime.utcnow)
+    
+    
+class Class(Base):
+    __tablename__ = 'class'
+    
+    id = Column(Integer, primary_key=True)
+    class_name = Column(String(50))
+    course_code = Column(String(50))
+    instructor_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    created = Column(DateTime, default=datetime.utcnow)
+    student_list = Column(JSONB)
+    
+    user = relationship("Users")
 
 
 class Lectures(Base):
     __tablename__ = 'lectures'
+    
     id = Column(Integer, primary_key=True)
     lecture_name = Column(String)
+    class_id = Column(Integer, ForeignKey('class.id'), nullable=False)
     lecture_date = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id',ondelete='CASCADE'), nullable=True)
-    is_instructor = Column(Boolean, unique=False, default=False)
-    number_of_students = Column(Integer)
-    user = relationship("Users", back_populates="lectures")
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     created = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("Users")
+    class_ = relationship("Class")
 
     @classmethod
     def if_is_instructor(cls, session, lecture_id):
@@ -56,38 +76,38 @@ class Quizzes(Base):
 
     id = Column(Integer, primary_key=True)
     quiz_name = Column(String(50))
-    quiz_type = Column(ENUM(QuizType))
     number_of_questions = Column(Integer)
     quiz_duration = Column(Integer)
     lecture_id = Column(ForeignKey('lectures.id'), nullable=False)
     created = Column(DateTime, default=datetime.utcnow)
 
     lectures = relationship('Lectures')
+    questions = relationship('Questions', back_populates='quiz')
 
 
 class Questions(Base):
     __tablename__ = 'questions'
 
     id = Column(Integer, primary_key=True)
+    question_order = Column(Integer)
+    question_type = Column(ENUM(QuestionType, name="question_type"))
     question = Column(String(50))
     correct_answer = Column(String(50))
-    answer_list_id = Column(ForeignKey('answer_lists.id'), nullable=False)
     quiz_id = Column(ForeignKey('quizzes.id'), nullable=False)
     created = Column(DateTime, default=datetime.utcnow)
 
-    answer_lists = relationship('AnswerLists')
-    quizzes = relationship('Quizzes')
+    quiz = relationship('Quizzes', back_populates='questions')
+    answers = relationship('QuestionAnswers', back_populates='question')
 
 
-class AnswerLists(Base):
-    __tablename__ = 'answer_lists'
+class QuestionAnswers(Base):
+    __tablename__ = 'question_answers'
 
     id = Column(Integer, primary_key=True)
-    first_answer = Column(String(50))
-    second_answer = Column(String(50))
-    third_answer = Column(String(50))
-    fourth_answer = Column(String(50))
-    created = Column(DateTime, default=datetime.utcnow)
+    answer = Column(String(50))
+    question_id = Column(ForeignKey('questions.id'))
+
+    question = relationship('Questions', back_populates='answers')
 
 
 class Responses(Base):
@@ -96,12 +116,14 @@ class Responses(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(ForeignKey('users.id'), nullable=False)
     question_id = Column(ForeignKey('questions.id'), nullable=False)
+    quiz_id = Column(ForeignKey('quizzes.id'), nullable=False)
     answer = Column(String(50))
-    correct = Column(Boolean)
+    iscorrect = Column(Boolean)
     created = Column(DateTime, default=datetime.utcnow)
 
     questions = relationship('Questions')
     users = relationship('Users')
+    quizzes = relationship('Quizzes')
 
 
 class Scores(Base):

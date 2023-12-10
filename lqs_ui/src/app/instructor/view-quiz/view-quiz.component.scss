@@ -1,0 +1,114 @@
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  background-color: #E1E0DD;
+  color: black;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 15px;
+  z-index: 2;
+}
+
+#logo1 {
+  img {
+    width: 100px;
+    margin: 0 16px;
+  }
+}
+
+.admindash {
+  margin-left: auto;
+  margin-right: 16px;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.Bottom_toolbar {
+  position: fixed;
+  color: black;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  background-color: #E1E0DD;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: bold;
+  z-index: 1;
+}
+
+
+.version {
+  position: absolute;
+  left: 15px;
+  margin-left: 16px;
+}
+
+.Version_time {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+}
+
+.table-container {
+  padding: 2rem;
+  max-width: 1400px;
+  min-width: 1300px;
+  margin: 120px auto 0;
+  margin-bottom: 25px;
+}
+
+.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.mat-header-cell, .mat-cell {
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+  width: 150px;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #f2f2f2;
+}
+
+button {
+  margin: 2px;
+}
+
+.mat-mdc-table {
+  table-layout: auto;
+  white-space: normal;
+  margin-bottom: 35px;
+  border-radius: 5px;
+}
+
+$custom-green: #4CAF50; // replace with your desired green color
+
+button.custom-green {
+  background-color: $custom-green;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+
+button.custom-green:hover {
+  background-color: darken($custom-green, 10%);
+}

@@ -1,0 +1,68 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="view-quiz.component.scss" />
+  </head>
+  
+  <div class="toolbar" role="banner">
+    <div id="logo1">
+      <img alt="lqs Logo" src="assets/b.png" />
+    </div>
+
+  </div>
+  
+
+<div *ngIf='isQuizData' class="table-container">
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="quiz_id">
+      <mat-header-cell *matHeaderCellDef> Quiz ID </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.quiz_id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="quiz_title">
+      <mat-header-cell *matHeaderCellDef> Quiz Title </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.quiz_title}} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="quiz_name">
+      <mat-header-cell *matHeaderCellDef> Quiz Code </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.quiz_name}} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="number_of_questions">
+      <mat-header-cell *matHeaderCellDef> Number of Questions </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.number_of_questions}} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="quiz_duration">
+      <mat-header-cell *matHeaderCellDef> Quiz Duration </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.quiz_duration}} Min </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="created_date">
+      <mat-header-cell *matHeaderCellDef> Created Date </mat-header-cell>
+      <mat-cell *matCellDef="let quiz"> {{quiz.created_date}} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+      <mat-cell *matCellDef="let quiz">
+        <button mat-raised-button color="primary" (click)="downloadQuiz(quiz)">Download</button>
+        <button mat-raised-button color="warn" (click)="openConfirmationDialog(quiz)">Delete</button>
+      </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</div>
+  
+
+
+<div class="Bottom_toolbar" role="banner">
+    <div class="version">
+      <span>© 2023 LQS </span>
+      <span>V {{version}}</span>
+    </div>
+    <div class="Version_time">
+      <span>{{date}} {{time}}</span>
+    </div>
+  </div>

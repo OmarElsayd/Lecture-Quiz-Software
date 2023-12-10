@@ -1,0 +1,58 @@
+
+<head>
+    <link rel="stylesheet" type="text/scss" href="admin-console.component.scss">
+</head>
+
+<!-- Toolbar -->
+<div class="toolbar" role="banner">
+    <div id="logo1">
+        <img width="100" style="margin: 0 16px;" alt="lqs Logo" src="assets/b.png" />
+    </div>
+</div>
+
+
+<div class="contaner">
+<mat-checkbox [(ngModel)]="isStudentForm">Create Student Account</mat-checkbox>
+<mat-checkbox [(ngModel)]="isTAForm">Create TA Account</mat-checkbox>
+
+<ng-container *ngIf="isStudentForm">
+  <form [formGroup]="studentForm" (ngSubmit)="onStudentSubmit()">
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Password" formControlName="password" type="password">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Create Student Account</button>
+  </form>
+</ng-container>
+
+<ng-container *ngIf="isTAForm">
+  <form [formGroup]="taForm" (ngSubmit)="onTaSubmit()">
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="Name">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Password" formControlName="password" type="password">
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">Create TA Account</button>
+  </form>
+</ng-container>
+</div>
+
+
+<div class="Bottom_toolbar" role="banner" style="font-family: 'Frank Ruhl Libre', serif; font-weight: bold;">
+    <div class="version" style="position: absolute; left: 15px;">
+        <span>© 2023 LQS </span>
+        <span>V {{version}}</span>
+    </div>
+    <div class="Version_time">
+        <span>{{date}} {{time}}</span>
+    </div>
+</div>

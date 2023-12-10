@@ -1,0 +1,112 @@
+.toolbar {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #E1E0DD;
+    color: black;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 15px;
+    span{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        letter-spacing: 3px;
+    }
+  }
+
+.Bottom_toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #E1E0DD;
+  }
+
+.Version_time {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+}
+
+.start-quiz-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    
+  .quiz-code {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    min-height: 50px;
+    background-color: #E1E0DD;
+    border-radius: 8px;
+    margin: 15px;
+    
+
+    span{
+        font-size: 32px;
+        font-weight: 600;
+        padding: 8px;
+    }
+    .code{
+        color: #e00909;
+    }
+  }
+
+  .number-joined{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    min-height: 50px;
+    background-color: #E1E0DD;
+    border-radius: 8px;
+    margin: 15px;
+
+    span{
+        font-size: 25px;
+        font-weight: 600;
+        padding: 8px;
+    }
+  }
+    .star-quiz{
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    height: 45px;
+    width: 150px;
+    background: #3d3d3d;
+    color: #ffffff;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    margin: 20px;
+    box-sizing: border-box;
+    letter-spacing: 5px;
+    }
+     
+    .star-quiz:hover {
+        background: #616060;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    .star-quiz:active {
+        background: #616060;
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}

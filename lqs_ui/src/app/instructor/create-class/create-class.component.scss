@@ -1,0 +1,81 @@
+.toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #E1E0DD;
+    color: black;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 500;
+    font-size: 24px;
+    z-index: 2;
+    letter-spacing: 15px;
+    span{
+        margin-left: 16px;
+
+    }
+  }
+
+  .admindash {
+    margin-left: auto;
+    margin-right: 16px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+
+  .bottom_toolbar {
+    position: fixed;
+    color: black;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #E1E0DD;
+  }
+
+  .version {
+    margin-left: 16px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: bold;
+  }
+
+  .Version_time {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+  }
+
+  
+  .create-class-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 120px;
+    background-color: #E1E0DD;
+    border-radius: 4px;
+    padding: 32px;
+    box-sizing: border-box;
+    max-width: 400px;
+    margin: 120px auto 0 auto;
+  
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+  
+    button {
+      width: 100%;
+    }
+  }
+  
