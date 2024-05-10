@@ -10,4 +10,5 @@ jobs:
     runs-on: [Test2]
     steps:
       - name: Print Test2 test
-        run: echo "Hello world" 
+        run: Write-Output "Hello World"
+
