@@ -1,0 +1,13 @@
+name: Windows CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: [Test2]
+    steps:
+      - name: Print Test2 test
+        run: echo "Hello world" 
